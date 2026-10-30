@@ -1,0 +1,6 @@
+Stock Transport Order delivery automation
+
+The business currently creates delivery notes manually for approximately 150 STOs per day.
+Automate outbound delivery creation for supplying plant 1000 and receiving plant 1100 when material available.
+Process eligible STOs on a scheduled run, avoid duplicate deliveries, and provide a failure report with a reason for each failed STO.
+The exact material availability rule must be clarified during functional analysis.
