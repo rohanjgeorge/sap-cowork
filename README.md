@@ -40,7 +40,7 @@ Fill the fields according to the provider you select:
 
 | Field | What to enter |
 | --- | --- |
-| **Model identifier** | The provider’s exact API model ID, copied from its console or documentation. Our app adds the provider prefix automatically. |
+| **Model identifier** | The provider’s exact API model ID, copied from its console or documentation. Our app adds the provider prefix automatically. | E.g. for OpenAI is gpt-6.1-sol
 | **API key** | Your API key for that provider. Paste it into Settings, not this chat. Leave blank only when retaining an already saved key. |
 | **Base URL** | The provider’s API base endpoint, as explained below. |
 
