@@ -8,9 +8,11 @@ class ContextSessionService:
         self.memory = memory
         self.thresholds = (0.60, 0.75, 0.85)
 
-    def append(self, project_id, role, content):
+    def append(self, project_id, role, content, metadata=None):
         session = self.storage.load_session(project_id)
         message = {"role": role, "content": content}
+        if metadata:
+            message.update({key: metadata[key] for key in ("origin", "provider", "model") if key in metadata})
         session["messages"].append(message)
         session["working_messages"].append(message)
         self.storage.save_session(project_id, session)

@@ -56,6 +56,22 @@ class FakeModelProvider:
     def complete(self, request):
         self.calls.append(request)
         context = request.context or {}
+        if context.get("operation") == "conversation":
+            content = (
+                "Demo mode is selected; no live model was called. Select and save a real provider "
+                "in Settings to have a model answer your questions. You can still try the "
+                "project workflow with Generate BRD, FRD and TDD."
+            )
+            return ModelResponse(
+                content=content,
+                provider="fake",
+                model="deterministic-v1",
+                status="success",
+                usage={
+                    "prompt_tokens": estimate_tokens(request.messages),
+                    "completion_tokens": estimate_tokens(content),
+                },
+            )
         template = context.get("template", "# Response\n## Result")
         requirement = context.get("requirement", "Connection test")
         facts = context.get("facts", [])

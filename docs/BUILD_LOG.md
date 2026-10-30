@@ -78,3 +78,5 @@ The final release gate is the STO browser journey against the running backend.
 - Final release gate | PASS | Full checks followed by the STO browser gate. See TEST_RESULTS.json.
 
 - Layer 36 | PASS | Revision/diff/upload/compaction/reopen/mobile browser tests; lint and formatting; full final gate passed. Seven-page assumptions report rendered with Word/PDF and all pages visually checked (bundled LibreOffice is unavailable on this Windows host).
+
+- Final release gate | PASS | Full checks followed by the STO browser gate. See TEST_RESULTS.json.

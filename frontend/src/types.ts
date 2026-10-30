@@ -80,7 +80,13 @@ export type ContextStatus = {
   provider: string;
   model: string;
 };
-export type Message = { role: string; content: string };
+export type Message = {
+  role: string;
+  content: string;
+  origin?: "model" | "workflow";
+  provider?: string;
+  model?: string;
+};
 export type Asset = {
   kind: string;
   file_id?: string;

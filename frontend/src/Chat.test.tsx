@@ -57,3 +57,30 @@ it("renders a clarification and submits an answer for the waiting task", async (
     clarification_id: "q",
   });
 });
+
+it("distinguishes actual model replies from workflow confirmations", () => {
+  const w = workspace();
+  w.session.messages = [
+    {
+      role: "assistant",
+      content: "How can I help with your SAP project?",
+      origin: "model",
+      provider: "openai",
+      model: "configured-openai-model",
+    },
+    { role: "assistant", content: "Requirement captured.", origin: "workflow" },
+  ];
+  render(
+    <Chat
+      workspace={w}
+      onAction={vi.fn()}
+      onOpen={vi.fn()}
+      onAttach={vi.fn()}
+      busy={false}
+      progress=""
+      optimistic=""
+    />,
+  );
+  expect(screen.getByText("openai · configured-openai-model")).toBeVisible();
+  expect(screen.getByText("Workflow")).toBeVisible();
+});

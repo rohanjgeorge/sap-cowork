@@ -103,7 +103,11 @@ export default function Chat({
                     <p className="message-author">
                       {m.role === "user" ? "You" : "CoWork"}
                       <span>
-                        {m.role === "assistant" ? "Orchestrator" : ""}
+                        {m.role === "assistant"
+                          ? m.origin === "model"
+                            ? `${m.provider} · ${m.model}`
+                            : "Workflow"
+                          : ""}
                       </span>
                     </p>
                     <ReactMarkdown>{m.content}</ReactMarkdown>

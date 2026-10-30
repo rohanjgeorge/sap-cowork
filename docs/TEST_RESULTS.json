@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-10-29T20:36:52.368293+00:00",
+  "started_at": "2026-10-30T03:23:36.946168+00:00",
   "steps": [
     {
       "name": "Python lint",
@@ -28,7 +28,7 @@
         "scripts"
       ],
       "exit_code": 0,
-      "output": "66 files already formatted\n"
+      "output": "67 files already formatted\n"
     },
     {
       "name": "Backend and CLI full suite",
@@ -40,7 +40,7 @@
         "--junitxml=docs/python-tests.xml"
       ],
       "exit_code": 0,
-      "output": "........................................................................ [ 83%]\n..............                                                           [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  D:\\rohanjgeorge\\SAP CoWork\\sap-cowork\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n86 passed, 1 warning in 9.82s\n"
+      "output": "........................................................................ [ 75%]\n.......................                                                  [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  D:\\rohanjgeorge\\SAP CoWork\\sap-cowork\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n95 passed, 1 warning in 13.63s\n"
     },
     {
       "name": "UI unit and interaction suite",
@@ -49,7 +49,7 @@
         "test"
       ],
       "exit_code": 0,
-      "output": "\n> sap-cowork-ui@0.1.0 test\n> vitest run\n\n\n RUN  v4.1.12 D:/rohanjgeorge/SAP CoWork/sap-cowork/frontend\n\n\n Test Files  8 passed (8)\n      Tests  12 passed (12)\n   Start at  02:07:03\n   Duration  2.47s (transform 1.03s, setup 1.77s, import 3.39s, tests 3.34s, environment 5.01s)\n\n"
+      "output": "\n> sap-cowork-ui@0.1.0 test\n> vitest run\n\n\n RUN  v4.1.12 D:/rohanjgeorge/SAP CoWork/sap-cowork/frontend\n\n\n Test Files  8 passed (8)\n      Tests  13 passed (13)\n   Start at  08:53:52\n   Duration  2.64s (transform 1.13s, setup 2.34s, import 4.12s, tests 3.33s, environment 6.17s)\n\n"
     },
     {
       "name": "TypeScript and production build",
@@ -59,7 +59,7 @@
         "build"
       ],
       "exit_code": 0,
-      "output": "\n> sap-cowork-ui@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.5 building for production...\ntransforming...\n\u2713 1771 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.56 kB \u2502 gzip:   0.34 kB\ndist/assets/index-D0T4oBbg.css   18.31 kB \u2502 gzip:   4.91 kB\ndist/assets/index-CBxzuHYG.js   393.57 kB \u2502 gzip: 121.27 kB\n\u2713 built in 2.33s\n"
+      "output": "\n> sap-cowork-ui@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.5 building for production...\ntransforming...\n\u2713 1771 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.56 kB \u2502 gzip:   0.34 kB\ndist/assets/index-D0T4oBbg.css   18.31 kB \u2502 gzip:   4.91 kB\ndist/assets/index-BQtT420T.js   393.61 kB \u2502 gzip: 121.30 kB\n\u2713 built in 2.57s\n"
     },
     {
       "name": "Frontend dependency audit",
@@ -81,7 +81,7 @@
         "e2e/experience.spec.ts"
       ],
       "exit_code": 0,
-      "output": "\n> sap-cowork-ui@0.1.0 test:e2e\n> playwright test e2e/experience.spec.ts\n\n\nRunning 3 tests using 1 worker\n\n  ok 1 e2e\\experience.spec.ts:22:1 \u203a files, revision history, comparison, compaction and project reopen (3.2s)\n  ok 2 e2e\\experience.spec.ts:99:1 \u203a draft TDD permits ABAP with a visible non-blocking PM error (1.3s)\n  ok 3 e2e\\experience.spec.ts:125:1 \u203a mobile workspace, provider settings and assisted stage confirmation (761ms)\n\n  3 passed (7.0s)\n[WebServer] INFO:     Started server process [13472]\n[WebServer] INFO:     Waiting for application startup.\n[WebServer] INFO:     Application startup complete.\n[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)\n(node:3720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+      "output": "\n> sap-cowork-ui@0.1.0 test:e2e\n> playwright test e2e/experience.spec.ts\n\n\nRunning 4 tests using 1 worker\n\n  ok 1 e2e\\experience.spec.ts:3:1 \u203a ordinary chat invokes the selected demo model instead of repeating workflow guidance (1.6s)\n  ok 2 e2e\\experience.spec.ts:59:1 \u203a files, revision history, comparison, compaction and project reopen (2.7s)\n  ok 3 e2e\\experience.spec.ts:134:1 \u203a draft TDD permits ABAP with a visible non-blocking PM error (1.4s)\n  ok 4 e2e\\experience.spec.ts:160:1 \u203a mobile workspace, provider settings and assisted stage confirmation (826ms)\n\n  4 passed (9.2s)\n[WebServer] INFO:     Started server process [11184]\n[WebServer] INFO:     Waiting for application startup.\n[WebServer] INFO:     Application startup complete.\n[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)\n(node:9964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
     },
     {
       "name": "FINAL STO GATING TEST",
@@ -93,9 +93,9 @@
         "e2e/zz-sto-gate.spec.ts"
       ],
       "exit_code": 0,
-      "output": "\n> sap-cowork-ui@0.1.0 test:e2e\n> playwright test e2e/zz-sto-gate.spec.ts\n\n\nRunning 1 test using 1 worker\n\n  ok 1 e2e\\zz-sto-gate.spec.ts:5:1 \u203a FINAL GATE: STO CR \u2192 BRD \u2192 FRD clarification \u2192 TDD \u2192 replaceable ABAP (4.2s)\n\n  1 passed (6.4s)\n[WebServer] INFO:     Started server process [15340]\n[WebServer] INFO:     Waiting for application startup.\n[WebServer] INFO:     Application startup complete.\n[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)\n(node:12088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+      "output": "\n> sap-cowork-ui@0.1.0 test:e2e\n> playwright test e2e/zz-sto-gate.spec.ts\n\n\nRunning 1 test using 1 worker\n\n  ok 1 e2e\\zz-sto-gate.spec.ts:5:1 \u203a FINAL GATE: STO CR \u2192 BRD \u2192 FRD clarification \u2192 TDD \u2192 replaceable ABAP (4.6s)\n\n  1 passed (6.5s)\n[WebServer] INFO:     Started server process [24952]\n[WebServer] INFO:     Waiting for application startup.\n[WebServer] INFO:     Application startup complete.\n[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)\n(node:27584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
     }
   ],
   "status": "passed",
-  "completed_at": "2026-10-29T20:37:28.095399+00:00"
+  "completed_at": "2026-10-30T03:24:20.070782+00:00"
 }

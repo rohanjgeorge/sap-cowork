@@ -1,5 +1,42 @@
 import { test, expect } from "@playwright/test";
 
+test("ordinary chat invokes the selected demo model instead of repeating workflow guidance", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Enter workspace" }).click();
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  await page
+    .getByLabel("Project name", { exact: true })
+    .fill("Conversational routing");
+  await page
+    .getByRole("button", { name: "Create project", exact: true })
+    .click();
+  await page.getByLabel("Message CoWork").fill("hi");
+  await page.getByRole("button", { name: "Send message" }).click();
+  await expect(
+    page.getByText(/Demo mode is selected; no live model was called/),
+  ).toBeVisible();
+  await expect(
+    page.getByText("fake · deterministic-v1", { exact: true }),
+  ).toBeVisible();
+  const projects = await (await page.request.get("/api/projects")).json();
+  const id = projects.find(
+    (p: { project_name: string }) =>
+      p.project_name === "Conversational routing",
+  ).project_id;
+  const state = await (
+    await page.request.get(`/api/projects/${id}/state`)
+  ).json();
+  expect(state.requirement).toBe("");
+  expect(state.artifact_registry).toEqual([]);
+  await page
+    .getByLabel("Message CoWork")
+    .fill("Requirement: Automate deliveries");
+  await page.getByRole("button", { name: "Send message" }).click();
+  await expect(page.getByText("Workflow", { exact: true })).toBeVisible();
+});
+
 async function create(
   page: import("@playwright/test").Page,
   name: string,
@@ -53,13 +90,11 @@ test("files, revision history, comparison, compaction and project reopen", async
   ).toBeVisible();
   await page.getByRole("tab", { name: "Files", exact: true }).click();
   await page.getByRole("button", { name: "Upload file" }).click();
-  await page
-    .getByLabel("Choose file")
-    .setInputFiles({
-      name: "sap_context.md",
-      mimeType: "text/markdown",
-      buffer: Buffer.from("Availability definition: use unrestricted stock"),
-    });
+  await page.getByLabel("Choose file").setInputFiles({
+    name: "sap_context.md",
+    mimeType: "text/markdown",
+    buffer: Buffer.from("Availability definition: use unrestricted stock"),
+  });
   await page.getByLabel("Context domain").selectOption("SAP");
   await page.getByRole("button", { name: "Add to project" }).click();
   await expect(

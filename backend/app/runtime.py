@@ -29,6 +29,7 @@ class Runtime:
         self.registry.register("FRD_GENERATOR", ArtifactCapability("FRD", self.worker, storage))
         self.registry.register("TDD_GENERATOR", ArtifactCapability("TDD", self.worker, storage))
         self.orchestrator = Orchestrator(storage, self.registry, ContextPlanner(), ContextHandler(storage))
+        self.orchestrator.model_gateway = self.gateway
         self.orchestrator.clarifications = ClarificationService(storage)
         self.memory = MemoryService(storage)
         self.orchestrator.memory_service = self.memory

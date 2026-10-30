@@ -54,7 +54,9 @@ def create_app(data_dir=None, secret_store=None, access_code=None):
     sessions = {}
     configured_code = access_code if access_code is not None else os.getenv("COWORK_ACCESS_CODE", "")
     allowed_origins = [
-        f"http://{host}:{port}" for host in ("localhost", "127.0.0.1") for port in (8000, 5173, 4173)
+        f"http://{host}:{port}"
+        for host in ("localhost", "127.0.0.1")
+        for port in {8000, 5173, 4173, int(os.getenv("COWORK_PORT", "8000"))}
     ]
     app.add_middleware(
         CORSMiddleware,

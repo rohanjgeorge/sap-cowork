@@ -89,7 +89,7 @@ Final verification: 86 Python/backend/CLI tests; 12 UI interaction tests; three 
 
 **A30 Stage assistance.** The backend suggests a starting stage from the latest artifact type the user declares. The user must confirm it. It is a deterministic availability-based suggestion; it does not semantically inspect arbitrary uploaded documents to infer the stage. Upstream files can be attached after project creation.
 
-**A31 Chat scope and streaming.** Common generation/review/retry commands and clarification answers are routed deterministically. The UI also submits explicit actions. Long first messages are captured as change requests. General unmatched conversation returns project guidance rather than pretending to provide an unrestricted agent chat. SSE streams live task progress and the final result; native model-token streaming is deferred.
+**A31 Chat scope and streaming.** Common generation/review/retry commands and clarification answers are routed deterministically. The UI also submits explicit actions. Long first messages are captured as change requests. Ordinary greetings, questions and unmatched follow-up conversation now use the selected model through ModelGateway, with project context and recent working conversation. Greetings are not captured as requirements. Model replies identify their actual provider/model; deterministic confirmations are labelled Workflow. Provider failures are visible and never silently fall back to demo output. SSE streams task progress and the final result; native model-token streaming is deferred.
 
 **A32 Files and revisions.** Users can upload supporting files or register them as draft artifacts, select a context domain, navigate versions, approve/reject exact versions and compare consecutive versions with a line diff. Generated artifacts are read-only; revisions create a new version. Uploaded raw files are downloadable; generated/registered artifacts open in the document viewer.
 
@@ -122,3 +122,8 @@ Final verification: 86 Python/backend/CLI tests; 12 UI interaction tests; three 
 6. Your ABAP approval clarification and attached 36-step build/test direction.
 
 Integration references checked: https://docs.litellm.ai/docs/completion/input and https://fastapi.tiangolo.com/advanced/events/.
+
+
+## Follow up fix for connected provider chat
+
+The original V1 called the selected provider for artifact generation but returned fixed guidance for ordinary chat. This was corrected by routing conversation through the orchestrator and ModelGateway, preserving any active workflow task, retaining recent model conversation, and storing response provenance. Regression tests cover mocked OpenAI chat and artifact routing, explicit demo labeling, visible provider failures without fallback, and SSE/UI behavior. Browser tests can run on COWORK_E2E_PORT with isolated data so they do not interrupt the local app. User provider credentials and project data were not changed. The original Word report records the initial delivery; this Markdown register includes the subsequent fix.

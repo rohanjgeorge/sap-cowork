@@ -78,9 +78,9 @@ class ApplicationService:
                 "assets": self.storage.list_project_assets(project_id),
             }
 
-    def _message(self, project_id, role, text):
+    def _message(self, project_id, role, text, metadata=None):
         with self.storage.transaction(project_id):
-            self.runtime.context_session.append(project_id, role, text)
+            self.runtime.context_session.append(project_id, role, text, metadata)
 
     def chat(
         self,
@@ -113,6 +113,44 @@ class ApplicationService:
             if not action:
                 if state.task_status == TaskStatus.AWAITING_INPUT and text:
                     action = "answer"
+                elif not text or text in ("status", "project status", "/status"):
+                    action = "status"
+                elif text.startswith(("requirement:", "cr:")):
+                    action = "submit_requirement"
+                elif (
+                    text.rstrip("!.? ")
+                    in (
+                        "hi",
+                        "hello",
+                        "hey",
+                        "good morning",
+                        "good afternoon",
+                        "good evening",
+                        "thanks",
+                        "thank you",
+                    )
+                    or text.endswith("?")
+                    or text.startswith(
+                        (
+                            "what ",
+                            "how ",
+                            "why ",
+                            "who ",
+                            "which ",
+                            "where ",
+                            "when ",
+                            "explain ",
+                            "describe ",
+                            "tell me ",
+                            "please explain ",
+                            "help me understand ",
+                            "can you ",
+                            "could you ",
+                            "would you ",
+                        )
+                    )
+                ):
+                    action = "conversation"
                 elif not state.requirement and (
                     len(message) > 120
                     or "\n" in message
@@ -139,11 +177,13 @@ class ApplicationService:
                 elif not state.requirement or text.startswith(("requirement:", "cr:")):
                     action = "submit_requirement"
                 else:
-                    action = "status"
+                    action = "conversation"
             result = {}
             self.runtime.orchestrator.events.callback = progress
             try:
-                if action == "generate":
+                if action == "conversation":
+                    result = self.runtime.orchestrator.converse(project_id, message, model_policy, task_id)
+                elif action == "generate":
                     project = self.storage.load_project(project_id)
                     result = self.runtime.orchestrator.run(
                         project_id,
@@ -216,7 +256,15 @@ class ApplicationService:
                     or self.storage.load_state(project_id).recommended_next_action
                     or "Ready."
                 )
-            self._message(project_id, "assistant", reply)
+            self._message(
+                project_id,
+                "assistant",
+                reply,
+                {
+                    "origin": result.get("origin", "workflow"),
+                    **({key: result[key] for key in ("provider", "model") if key in result}),
+                },
+            )
             return {**result, "message": reply, "workspace": self.open_project(project_id)}
 
     def upload(self, project_id, name, data, artifact_type=None, domain="BUSINESS"):
