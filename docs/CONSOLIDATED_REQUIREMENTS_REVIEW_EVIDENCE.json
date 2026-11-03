@@ -1,0 +1,347 @@
+{
+  "review_date": "2026-11-03",
+  "timezone": "Asia/Calcutta",
+  "scope": "Read-only comparison; report artifacts only.",
+  "requirements": [
+    {
+      "file": "SAP_CoWork_AI_Layer_Data_Models_and_Interface_Contracts_Updated_V1_1.docx",
+      "size": 49487,
+      "sha256": "b263b154c54be5d7550ddc309590edfd61e24d8b8b26f6b4f6c4983e4515cdc2"
+    },
+    {
+      "file": "SAP_CoWork_AI_Layer_Orchestration_and_State_Transition_Specification_Updated_V1_1.docx",
+      "size": 48218,
+      "sha256": "112fa8678d94a9afd2adeea89364a55bd95f9e4c795da46694b16add3323818d"
+    },
+    {
+      "file": "SAP_CoWork_AI_Layer_Requirements_and_Conceptual_Architecture_Updated_V1_1.docx",
+      "size": 51204,
+      "sha256": "a3c3268aa985a8c047d9d0865c150f6e66c4cd887b9c8b304e786823611c1f60"
+    },
+    {
+      "file": "SAP_CoWork_AI_Layer_Tech_Stack_and_Model_Access_Updated_V1_1.docx",
+      "size": 46362,
+      "sha256": "38d23dba54e83293dad8be6a5fc04dfa9af952dcdcfec37a7efdb681e57d3e5e"
+    }
+  ],
+  "code_snapshot_sha256": {
+    "backend/app/api.py": "38832bdf451c5e758b36ff1c61c59a895fc5f0727a9b6eef089c1602bfe83877",
+    "backend/app/models.py": "9db7d15b1fafa52a06d1e01b730169b5da44d4f8aa8a7be7f5ef56e0a3b18e8e",
+    "backend/app/state_management.py": "bfd4aa5404ae21ad6821649e95b83aba8da985749a909a874b15a64538208e35",
+    "backend/app/hooks.py": "e28f4c2aabfe917577aaedf8cd3ea0fd77f62b2c6dcf50840653f72b102c3ce5",
+    "backend/app/langgraph_orchestrator.py": "a2ca93f9c802fc6a2a18d7a24d906620bc171c80a3735c50175ec4cd54c2d9ba",
+    "backend/app/orchestration_events.py": "064335c9f28dd4b855c17e7d931d119e7f6764e7e053934323b91e6fc6348e28",
+    "backend/app/context_planning.py": "4b4a34bbeea3746ec749fc4b5461d2c6b034a3ff23af8f7705c63ff719fc74b8",
+    "backend/app/artifact_worker.py": "0f5edaa3088cdf350470bf5d39b4cc17a379e7dd8acd53d1ed31306bf0586b41",
+    "backend/app/artifact_profiles.py": "fed04225848f558e99863258812d6cb64ebf71376a9e12c33c4c53170a4a6c6f",
+    "backend/app/research.py": "07db503bbc825b65790bd9a558b16f7a816bb7cabaa443f63b231c3eeedbfd8e",
+    "backend/app/audit_capability.py": "8146542c63e8dcdce17200400a8950e5a0cab3b5931821aa2c8a8c7ffb9020d0",
+    "backend/app/services.py": "2b2d8d21b5d25614ebd3a0600c664a6cdfae969ae6757989bd8dac6a8b57f9de",
+    "cli/main.py": "211413b339af6595dc9ed37d2c9f540234744b1c822ec555347073461fe3a5e7",
+    "frontend/src/ProjectHome.tsx": "932d35bac4909bccc78be918c7bb4f1fd898586e84bfe94876a247be333fd3f6"
+  },
+  "previous_release": {
+    "status": "passed",
+    "completed_at_utc": "2026-11-02T20:07:42.754075+00:00",
+    "completed_at_local": "2026-11-03T01:37:42.754075+05:30",
+    "steps": [
+      {
+        "name": "Python lint",
+        "exit_code": 0
+      },
+      {
+        "name": "Python formatting",
+        "exit_code": 0
+      },
+      {
+        "name": "Backend and CLI full suite",
+        "exit_code": 0
+      },
+      {
+        "name": "UI unit and interaction suite",
+        "exit_code": 0
+      },
+      {
+        "name": "TypeScript and production build",
+        "exit_code": 0
+      },
+      {
+        "name": "Frontend dependency audit",
+        "exit_code": 0
+      },
+      {
+        "name": "Browser experience suite",
+        "exit_code": 0
+      },
+      {
+        "name": "FINAL STO GATING TEST",
+        "exit_code": 0
+      }
+    ],
+    "recorded_counts": {
+      "backend_cli": 164,
+      "ui": 19,
+      "browser_experience": 4,
+      "final_sto": 1
+    },
+    "rerun_for_this_review": false
+  },
+  "probes": [
+    {
+      "id": "P01",
+      "finding": "G05",
+      "setup": "Temporary Runtime; replace BRD_GENERATOR with a capability returning status success and no output; generate BRD.",
+      "observed": {
+        "task_status": "completed",
+        "error": null,
+        "artifact_count": 0
+      },
+      "post_implementation_status": "fixed",
+      "verification": "Superseded by conformance acceptance tests; original observations retained as review history."
+    },
+    {
+      "id": "P02",
+      "finding": "G02",
+      "setup": "Generate BRD with task same-id; reuse task ID with changed instructions and explicit new-version authors/remarks.",
+      "observed": {
+        "replayed": true,
+        "artifact_count": 1
+      },
+      "post_implementation_status": "fixed",
+      "verification": "Superseded by conformance acceptance tests; original observations retained as review history."
+    },
+    {
+      "id": "P03",
+      "finding": "G03",
+      "setup": "Add manual Flag(type=blocker, no code), then generate BRD.",
+      "observed": {
+        "artifact_created": true,
+        "flag_type": "blocker",
+        "flag_status": "active"
+      },
+      "post_implementation_status": "fixed",
+      "verification": "Superseded by conformance acceptance tests; original observations retained as review history."
+    },
+    {
+      "id": "P04",
+      "finding": "G04",
+      "setup": "Generate Draft ABAP/SIT/UAT, apply confirm_testing, inspect stage_complete(Testing).",
+      "observed": {
+        "statuses": {
+          "ABAP": "draft",
+          "SIT": "draft",
+          "UAT": "draft"
+        },
+        "active_testing_confirmation": true,
+        "testing_complete_function": true,
+        "approved_stage": "Planning"
+      },
+      "post_implementation_status": "fixed",
+      "verification": "Superseded by conformance acceptance tests; original observations retained as review history."
+    },
+    {
+      "id": "P05",
+      "finding": "G06",
+      "setup": "Set ContextBudget(max_tokens=1000), generate TDD, estimate saved package with application estimate_tokens.",
+      "observed": {
+        "budget": 1000,
+        "actual_estimate": 1276
+      },
+      "post_implementation_status": "fixed",
+      "verification": "Superseded by conformance acceptance tests; original observations retained as review history."
+    },
+    {
+      "id": "P06",
+      "finding": "G09",
+      "setup": "Empty project.sap_applicability; synthetic authorized adapter returns verified target-system S4P/release-2023 evidence; generate TDD.",
+      "observed": {
+        "project_target": {},
+        "release_requirement": "satisfied"
+      },
+      "interpretation": "Target-binding policy needs a decision; an explicitly trusted project-bound connector may establish the target, but the evaluator does not require that contract.",
+      "post_implementation_status": "fixed",
+      "verification": "Superseded by conformance acceptance tests; original observations retained as review history."
+    },
+    {
+      "id": "P07",
+      "finding": "G01",
+      "setup": "Local authenticated TestClient; POST chat action=set_stage stage=Design without expected_revision or request_id.",
+      "observed": {
+        "http_status": 200,
+        "draft_stage": "Design"
+      },
+      "post_implementation_status": "fixed",
+      "verification": "Superseded by conformance acceptance tests; original observations retained as review history."
+    }
+  ],
+  "limitations": [
+    "Only temporary synthetic project data, deterministic model behavior and MemorySecretStore were used.",
+    "No live provider/SAP/enterprise IAM test was performed.",
+    "No implementation or repository test changes were made. These observations are not newly failing repository test cases.",
+    "Illustrative schemas and expressly deferred integrations are separated from binding behavior requirements."
+  ],
+  "implementation_follow_up": {
+    "date": "2026-11-03",
+    "timezone": "Asia/Calcutta",
+    "status": "passed",
+    "findings": {
+      "G01": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G02": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G03": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G04": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G05": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G06": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G07": {
+        "status": "intentionally accepted",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G08": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G09": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G10": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      },
+      "G11": {
+        "status": "fixed",
+        "evidence": "backend/tests/test_conformance_decisions.py",
+        "report": "docs/V1_1_CONFORMANCE_DECISIONS_IMPLEMENTATION.md"
+      }
+    },
+    "intentionally_accepted": [
+      "Existing parent/task graph topology",
+      "Runtime-related ProjectState compatibility fields with checkpoint-first resumption and controlled legacy fallback",
+      "Descriptive/reserved profile fields",
+      "Configuration-driven model capabilities",
+      "Existing local evidence representation and configurable V1.1 budgets"
+    ],
+    "deferred": [
+      "Destructive ProjectState schema migration",
+      "Live SAP/ADT/Notes/configuration connectors",
+      "Enterprise SSO/production tenant isolation",
+      "Knowledge catalog/search/publication",
+      "Production ABAP generator",
+      "ATC/compiler integration and deep SAP certification",
+      "Full DOCX image/tracked-change fidelity",
+      "Distributed production checkpointing",
+      "Deployment/Maintenance",
+      "Model routing/failover/chargeback and monetary controls"
+    ],
+    "current_code_sha256": {
+      "backend/app/api.py": "3398d86a8bdfc15b531b334445dee05a4008940a7b801fde35da861cd456319d",
+      "backend/app/models.py": "85ee09ded260be9f98bf2c4b8281b7b6b9e10b985e1ae5c3f5abb652476eba8f",
+      "backend/app/state_management.py": "e13cb1de857a63fb8a5b8a28773abdacfa9589d778ebdadc4d9e187f1721c6a5",
+      "backend/app/hooks.py": "cfa650115e004bd0eb40eebffbc948a0c4f64c04a6795a9722494f5275e0e26f",
+      "backend/app/langgraph_orchestrator.py": "da996c7ac8ba2bf6d070f21ccf02c6070ca8241ee127ce5604687c03050ad214",
+      "backend/app/orchestration_events.py": "064335c9f28dd4b855c17e7d931d119e7f6764e7e053934323b91e6fc6348e28",
+      "backend/app/context_planning.py": "d2038800055c017bc36ecf90d9ae28022de7bbbbf787bde1e891d1ba15ae8ff6",
+      "backend/app/artifact_worker.py": "effe77c209a2266023c936fdfdcceba029822088cb6a7b7762f5cad7b6e24b9d",
+      "backend/app/artifact_profiles.py": "fed04225848f558e99863258812d6cb64ebf71376a9e12c33c4c53170a4a6c6f",
+      "backend/app/research.py": "07db503bbc825b65790bd9a558b16f7a816bb7cabaa443f63b231c3eeedbfd8e",
+      "backend/app/audit_capability.py": "8146542c63e8dcdce17200400a8950e5a0cab3b5931821aa2c8a8c7ffb9020d0",
+      "backend/app/services.py": "dbc068b68111104b07bbbafc7fd1dbc8a15d9012fd1a72c350ae4465072d816a",
+      "cli/main.py": "51f6f6d85846fd272be1780039f54474e5a1a0c917f3f8f7fd8e9dd5ade86765",
+      "frontend/src/ProjectHome.tsx": "60d3909a424332e7d15fff9c5e62f4c0379e1042e71d94aa46288ce5838c91af",
+      "backend/app/mutations.py": "9a728da662b1a417038a607aa72cf1ceefefe46258071bd061098354a3e3bc23",
+      "backend/app/generation_identity.py": "8b5e77db58c50ee8a1865f0571e3138a97f2536ce802f586a1279eab420ba5ce",
+      "backend/app/eligibility.py": "921817dc101a4353839e4c649db5a37d3e459173fe25fe48580b45fae631af79",
+      "backend/app/storage.py": "0493d007675984cfc43e39997c4502203dbd4b2c1bfb12b68eec53ae44c07b98",
+      "backend/app/local_storage.py": "6cf1517063757f10df6907580950ef108e8c492ec02c5a764caa8ddf96c04ece",
+      "backend/app/artifact_lifecycle.py": "6aa47338e9fa5adc60be71e337b8e174946166763715b8a3400abf1c55c6819f",
+      "frontend/src/ProjectMetadata.tsx": "75ea0d8bc4c79283bc00e2844c7b46886f2f9e0d922591d9a2e4db49ffedaa0c",
+      "frontend/src/ProjectMetadata.test.tsx": "6616086ba7fc6d9ad898b90c04586380237ba3833416732fa027201ab83e8dc2",
+      "backend/tests/test_conformance_decisions.py": "eeafb3731b0fdfb5a215826ec48e458bd5bdeb05a78a64eacaee81533390f1fa",
+      "backend/app/clarifications.py": "33b9b6ff78033a95dbdb30bc90c9bbb69a1b6481f851356d29e62657e6a26a12",
+      "backend/app/context_sources.py": "ca50873f31b5b1cfde9d7cf4c6efe790efd90c09cd5954e3df3f94a8cb4ac597",
+      "frontend/src/Workspace.tsx": "0ce5ec23a3156f1ea53dbe019f6258d0965f52f5fe84a3d52ff548105590904a",
+      "frontend/src/ContextEvidence.tsx": "ddf042dcea2e750825293e6110a4b77c76eeb6371ed8ed142127776fde265ffc",
+      "frontend/src/styles.css": "5983a1a9734b701e3cdb6cab89158094fedf05ba82a567cd31e84613b5ccf79b",
+      "frontend/src/types.ts": "e80c5100e36878d37269008db0acb6496f9bd28f37b993d84968d8e3308d18da",
+      "backend/app/runtime.py": "21eb12a375ec4bc355e4fe2874108bedeafbcfff492dfd5fe9fdc671fd7529c7",
+      "backend/app/capabilities.py": "7f2b72ae0d05ac14add24caa00a4d980f4d78ad858e77562eedbb7c753772c5a"
+    },
+    "new_tests": {
+      "backend_acceptance_cases": 30,
+      "ui_metadata_and_navigation_cases": 3
+    },
+    "last_gate_result": "passed: STO end-to-end executed last",
+    "unresolved_material_deviations": [],
+    "verified_at": "2026-11-02T21:30:07.672335+00:00",
+    "full_release_result": {
+      "status": "passed",
+      "backend_cli_tests": 194,
+      "ui_tests": 22,
+      "browser_experience_tests": 4,
+      "final_sto_tests": 1,
+      "steps": [
+        {
+          "name": "Python lint",
+          "exit_code": 0
+        },
+        {
+          "name": "Python formatting",
+          "exit_code": 0
+        },
+        {
+          "name": "Backend and CLI full suite",
+          "exit_code": 0
+        },
+        {
+          "name": "UI unit and interaction suite",
+          "exit_code": 0
+        },
+        {
+          "name": "TypeScript and production build",
+          "exit_code": 0
+        },
+        {
+          "name": "Frontend dependency audit",
+          "exit_code": 0
+        },
+        {
+          "name": "Browser experience suite",
+          "exit_code": 0
+        },
+        {
+          "name": "FINAL STO GATING TEST",
+          "exit_code": 0
+        }
+      ],
+      "evidence": "docs/TEST_RESULTS.json",
+      "completed_at": "2026-11-02T21:30:07.672335+00:00"
+    }
+  }
+}

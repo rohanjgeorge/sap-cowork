@@ -16,6 +16,10 @@ def test_frd_clarification_then_resume(storage, tmp_path):
         "ORGANIZATION",
         "HISTORICAL_DEVELOPMENT",
         "SDLC",
+        "FUNCTIONAL_PROCESS",
+        "SAP_FUNCTIONAL",
+        "STANDARDS_GOVERNANCE",
+        "SAP_TECHNICAL",
     ]
     clarification = paused["state"].open_clarifications[-1]
     resumed = r.orchestrator.clarifications.answer(
@@ -28,6 +32,9 @@ def test_frd_clarification_then_resume(storage, tmp_path):
     assert resumed["state"].active_task_id == paused["state"].active_task_id
     assert any(s.startswith("clarification:") for s in resumed["artifact"].sources)
     r.approvals.review("p", "FRD", "1", True)
+    assert storage.load_state("p").current_approved_stage == "Analysis"
+    r.orchestrator.run("p", "USER_STORIES")
+    r.approvals.review("p", "USER_STORIES", "1", True)
     assert storage.load_state("p").recommended_stage == "Design"
 
 

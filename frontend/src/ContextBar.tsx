@@ -1,16 +1,22 @@
-import { useState } from "react";
-import { Gauge, Minimize2 } from "lucide-react";
+import { useId, useState } from "react";
+import { ChevronDown, ChevronUp, Gauge, Minimize2 } from "lucide-react";
 import type { ContextStatus } from "./types";
+import ContextEvidence from "./ContextEvidence";
 export default function ContextBar({
   context,
   onCompact,
   busy,
+  projectId,
+  readOnly = false,
 }: {
   context: ContextStatus;
   onCompact: () => void;
   busy: boolean;
+  projectId?: string;
+  readOnly?: boolean;
 }) {
   const [details, setDetails] = useState(false);
+  const detailsId = useId();
   const labels: Record<string, string> = {
     healthy: "Healthy",
     watch: "Watch",
@@ -33,12 +39,18 @@ export default function ContextBar({
         <button
           className="context-inspect"
           aria-expanded={details}
+          aria-controls={detailsId}
           onClick={() => setDetails(!details)}
         >
           <Gauge size={13} />
           <span>
             Context <strong>{context.usage_percent}%</strong>
           </span>
+          {details ? (
+            <ChevronUp size={14} aria-hidden="true" />
+          ) : (
+            <ChevronDown size={14} aria-hidden="true" />
+          )}
         </button>
         <div
           className="context-meter"
@@ -55,28 +67,33 @@ export default function ContextBar({
           <Minimize2 size={12} /> Compact
         </button>
       </div>
-      <div className="context-domains">
-        {context.active_domains.map((d) => (
-          <span key={d}>{domains[d] || d}</span>
-        ))}
-      </div>
-      {details && (
-        <div className="context-details">
-          <p>
-            Estimated {context.used_tokens.toLocaleString()} tokens /{" "}
-            {context.usable_context.toLocaleString()} usable tokens. Model
-            window: {context.model_context_window.toLocaleString()}.
-          </p>
-          <p>
-            {context.provider} / {context.model} · {context.compactions}{" "}
-            compactions
-          </p>
-          <p>
-            This meter describes working context. Project state, memory and
-            stored artifacts are preserved when compacting.
-          </p>
+      <div className="context-details" id={detailsId} hidden={!details}>
+        <div className="context-domains">
+          {context.active_domains.map((d) => (
+            <span key={d}>{domains[d] || d}</span>
+          ))}
         </div>
-      )}
+        <p>
+          Estimated {context.used_tokens.toLocaleString()} tokens /{" "}
+          {context.usable_context.toLocaleString()} usable tokens. Model window:{" "}
+          {context.model_context_window.toLocaleString()}.
+        </p>
+        <p>
+          {context.provider} / {context.model} · {context.compactions}{" "}
+          compactions
+        </p>
+        <p>
+          This meter describes working context. Project state, memory and stored
+          artifacts are preserved when compacting.
+        </p>
+        {details && projectId && context.planning?.plan_ref && (
+          <ContextEvidence
+            projectId={projectId}
+            planRef={context.planning.plan_ref}
+            readOnly={readOnly}
+          />
+        )}
+      </div>
       {context.band === "compact_recommended" && (
         <p className="context-recommendation">
           Compact context before the next large task.

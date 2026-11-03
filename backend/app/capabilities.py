@@ -29,10 +29,47 @@ class CapabilityRegistry:
         implementation = self._implementations.get(capability_id)
         if implementation is None:
             raise ValueError(f"Capability {capability_id} is not configured")
-        result = implementation.invoke(request)
+        # Capabilities receive a snapshot, never a mutable alias of the parent's
+        # authoritative invocation state. Persistent writes belong to services.
+        snapshot = request.model_copy(deep=True)
+        from .models import ProjectState, TaskProjectView
+        from .router import ARTIFACT_CAPABILITY
+
+        if isinstance(snapshot.state, ProjectState):
+            kind = next((k.value for k, v in ARTIFACT_CAPABILITY.items() if v == capability_id), None)
+            snapshot.state = TaskProjectView.from_state(
+                snapshot.state, kind, snapshot.context.upstream_artifacts if snapshot.context else None
+            )
+        result = implementation.invoke(snapshot)
         if result.task_id != request.task_id or result.capability_id != capability_id:
             raise ValueError("Capability response correlation mismatch")
+        if result.request_id is not None and result.request_id != (request.request_id or request.task_id):
+            raise ValueError("Capability request correlation mismatch")
+        result.request_id = request.request_id or request.task_id
         return result
 
     def configured(self):
         return [key for key, value in self._implementations.items() if value is not None]
+
+    def output_contract(self, capability_id):
+        from .router import ARTIFACT_CAPABILITY
+
+        return "artifact" if capability_id in ARTIFACT_CAPABILITY.values() else "result"
+
+    def describe(self):
+        return [
+            {
+                "capability_id": key,
+                "kind": "subgraph_agentic"
+                if key == "RESEARCH"
+                else "subgraph"
+                if key == "AUDIT_WORKER"
+                else "external_module"
+                if key == "ABAP_GENERATOR"
+                else "tool_adapter"
+                if key == "SAP_LOOKUP"
+                else "artifact_worker",
+                "configured": self._implementations[key] is not None,
+            }
+            for key in sorted(self._implementations)
+        ]

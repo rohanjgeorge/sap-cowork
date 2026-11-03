@@ -11,14 +11,20 @@ STAGE_ARTIFACT = {
 }
 ARTIFACT_STAGE = {value: key for key, value in STAGE_ARTIFACT.items()}
 ARTIFACT_STAGE[ArtifactType.AUDIT_REPORT] = SDLCStage.TESTING
+ARTIFACT_STAGE[ArtifactType.USER_STORIES] = SDLCStage.ANALYSIS
+ARTIFACT_STAGE[ArtifactType.SIT] = SDLCStage.TESTING
 ARTIFACT_CAPABILITY = {a: f"{a.value}_GENERATOR" for a in STAGE_ARTIFACT.values()}
 ARTIFACT_CAPABILITY[ArtifactType.AUDIT_REPORT] = "AUDIT_WORKER"
+ARTIFACT_CAPABILITY[ArtifactType.USER_STORIES] = "USER_STORIES_GENERATOR"
+ARTIFACT_CAPABILITY[ArtifactType.SIT] = "SIT_GENERATOR"
 UPSTREAM = {
     ArtifactType.BRD: None,
     ArtifactType.FRD: ArtifactType.BRD,
+    ArtifactType.USER_STORIES: ArtifactType.BRD,
     ArtifactType.TDD: ArtifactType.FRD,
     ArtifactType.ABAP: ArtifactType.TDD,
     ArtifactType.UAT: ArtifactType.FRD,
+    ArtifactType.SIT: ArtifactType.TDD,
     ArtifactType.AUDIT_REPORT: ArtifactType.ABAP,
 }
 

@@ -1,9 +1,11 @@
-from .models import Clarification, ContextItem, ContextPackage, ProjectIssue, TaskStatus, now
+from .models import ContextItem, ContextPackage, now
+from .state_management import StateManagementService
 
 
 class ClarificationService:
-    def __init__(self, storage):
+    def __init__(self, storage, state_service=None):
         self.storage = storage
+        self.state_service = state_service or StateManagementService(storage)
 
     def preflight(self, state, artifact_type):
         if artifact_type == "BRD" and not state.requirement.strip():
@@ -24,43 +26,47 @@ class ClarificationService:
         return []
 
     def pause(self, state, questions):
-        state.issues = [i for i in state.issues if i.code != "MATERIAL_INPUT_REQUIRED"]
-        state.issues.append(
-            ProjectIssue(
-                code="MATERIAL_INPUT_REQUIRED",
-                message="Answer the open clarification to resume this task.",
-                severity="error",
-                blocking=True,
-                stage=state.current_stage,
-            )
-        )
-        for question in questions:
-            if not any(c.question == question and c.status == "open" for c in state.open_clarifications):
-                state.open_clarifications.append(
-                    Clarification(question=question, task_id=state.active_task_id)
-                )
-        state.task_status = TaskStatus.AWAITING_INPUT
-        self.storage.save_state(state.project_id, state)
+        self.state_service.request(state, "add_clarification", {"questions": questions})
         return {"state": state, "questions": questions}
 
-    def answer(self, orchestrator, project_id, clarification_id, response):
+    def answer(
+        self, orchestrator, project_id, clarification_id, response, *, expected_revision=None, request_id=None
+    ):
         if not response.strip():
             raise ValueError("Clarification answer cannot be empty")
+        before = self.storage.load_state(project_id)
+        original = next((c for c in before.clarifications if c.clarification_id == clarification_id), None)
+        if original and callable(getattr(orchestrator, "sync_runtime_projection", None)):
+            orchestrator.sync_runtime_projection(project_id, original.task_id)
+            before = self.storage.load_state(project_id)
+        paused = (
+            original is not None
+            and original.task_id == before.active_task_id
+            and before.task_status == "awaiting_input"
+        )
+        if original and callable(getattr(orchestrator, "checkpoint_snapshot", None)):
+            snapshot = orchestrator.checkpoint_snapshot(project_id, original.task_id)
+            if snapshot["values"]:
+                paused = bool(snapshot["next"] and snapshot["values"].get("wait_reason") == "clarification")
+        state = self.state_service.apply(
+            project_id,
+            "resolve_clarification",
+            {
+                "clarification_id": clarification_id,
+                "answer": response,
+            },
+            expected_revision=expected_revision,
+            request_id=request_id,
+        )
+        question = next(c for c in state.clarifications if c.clarification_id == clarification_id)
+        if original is not None and original.status == "resolved":
+            return {"state": before, "message": "Clarification already resolved."}
         with self.storage.transaction(project_id):
-            state = self.storage.load_state(project_id)
-            candidates = [c for c in state.open_clarifications if c.clarification_id == clarification_id]
-            if not candidates or candidates[0].status != "open":
-                raise ValueError("Open clarification not found")
-            question = candidates[0]
-            question.response = response
-            question.status = "resolved"
-            if "provide the requirement" in question.question.lower():
-                state.requirement = response
             self.storage.save_context(
                 project_id,
                 ContextPackage(
                     project_id=project_id,
-                    task_id=state.active_task_id,
+                    task_id=state.active_task_id or "clarification",
                     business_context=[
                         ContextItem(
                             content=f"{question.question}\nAnswer: {response}",
@@ -70,18 +76,19 @@ class ClarificationService:
                     ],
                 ),
             )
-            self.storage.save_state(project_id, state)
             memory = self.storage.load_memory(project_id)
             memory.content += f"\nResolved clarification: {question.question}\n{response}\n"
             memory.updated_at = now()
             self.storage.save_memory(project_id, memory)
-            if any(
-                c.status == "open" and c.task_id == state.active_task_id for c in state.open_clarifications
-            ):
-                return {
-                    "state": state,
-                    "questions": [c.question for c in state.open_clarifications if c.status == "open"],
-                }
-            state.issues = [i for i in state.issues if i.code != "MATERIAL_INPUT_REQUIRED"]
-            self.storage.save_state(project_id, state)
-            return orchestrator._execute(state, state.expected_next_artifact)
+        if any(c.status == "open" and c.task_id == state.active_task_id for c in state.clarifications):
+            return {
+                "state": state,
+                "questions": [
+                    c.question
+                    for c in state.clarifications
+                    if c.status == "open" and c.task_id == state.active_task_id
+                ],
+            }
+        if not paused:
+            return {"state": state, "message": "Clarification resolved. Existing artifacts are unchanged."}
+        return orchestrator._execute(state, question.related_artifact or state.expected_next_artifact)

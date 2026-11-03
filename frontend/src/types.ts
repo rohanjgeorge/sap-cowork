@@ -27,12 +27,37 @@ export type Artifact = {
   approved_by: string | null;
   feedback: string | null;
   sources: string[];
+  template_ref?: string | null;
+  recommendations?: string[];
+  context_package_ref?: string | null;
+  context_plan_ref?: string | null;
+  context_gaps?: ContextGap[];
+  evidence_provenance?: EvidenceSource[];
 };
 export type Clarification = {
+  resolution?: string | null;
+  task_id?: string | null;
   clarification_id: string;
   question: string;
   status: string;
   response: string | null;
+};
+export type Decision = {
+  decision_id: string;
+  description: string;
+  decided_by?: string;
+};
+export type ProjectFlag = {
+  flag_id: string;
+  description: string;
+  type?: "warning" | "blocker" | "exception";
+  status?: "active" | "resolved";
+};
+export type ProjectRecords = {
+  clarifications?: Clarification[];
+  open_clarifications?: Clarification[];
+  decisions?: Decision[];
+  flags?: ProjectFlag[];
 };
 export type Issue = {
   code: string;
@@ -46,6 +71,7 @@ export type StageStatus = {
   color: "green" | "amber" | "grey";
   label: string;
   expected_artifact: string;
+  expected_artifacts?: string[];
   documents: ArtifactRef[];
   clarifications: Clarification[];
   issues: Issue[];
@@ -59,8 +85,19 @@ export type ProjectStatus = {
   stages: StageStatus[];
   issues: Issue[];
   open_clarifications: Clarification[];
+  current_draft_stage?: Stage;
+  current_approved_stage?: Stage;
+  project_status?: "active" | "completed" | "incomplete";
+  state_revision?: number;
+  follow_ups?: Record<string, string>;
+  flags?: ProjectFlag[];
+  confirmations?: { kind: string; active: boolean }[];
 };
 export type Project = {
+  client_name?: string | null;
+  organization_id?: string | null;
+  program_id?: string | null;
+  sap_applicability?: Record<string, string>;
   project_id: string;
   project_name: string;
   description: string;
@@ -79,6 +116,32 @@ export type ContextStatus = {
   compactions: number;
   provider: string;
   model: string;
+  planning?: {
+    package_ref: string;
+    plan_ref: string;
+    gaps: ContextGap[];
+    constraints: Record<string, unknown>;
+  } | null;
+};
+export type ContextGap = {
+  requirement_id: string;
+  gap_type: string;
+  impact: string;
+  reason: string;
+  qualification: string;
+  follow_up: string;
+};
+export type EvidenceSource = {
+  source_id?: string;
+  source?: string;
+  original_uri?: string;
+  source_version?: string | null;
+  source_category?: string;
+  domain?: string;
+  scope?: string;
+  evidence_status?: string;
+  authority?: string;
+  rights?: string;
 };
 export type Message = {
   role: string;
@@ -98,10 +161,25 @@ export type Asset = {
   size?: number;
 };
 export type Workspace = {
+  snapshot_at?: string;
+  onboarding?: {
+    artifact_statuses?: Record<string, "draft" | "approved">;
+    selected_artifacts: string[];
+    pending_artifacts: string[];
+    complete: boolean;
+    message: string;
+  } | null;
   project: Project;
   state: {
+    clarifications?: Clarification[];
+    decisions?: Decision[];
+    flags?: ProjectFlag[];
     project_id: string;
     current_stage: Stage;
+    current_draft_stage?: Stage;
+    current_approved_stage?: Stage;
+    project_status?: "active" | "completed" | "incomplete";
+    state_revision?: number;
     current_task: string | null;
     expected_next_artifact: string | null;
     task_status: string;
@@ -125,6 +203,11 @@ export type ChatInput = {
   version?: string;
   feedback?: string;
   stage?: Stage;
+  new_version?: boolean;
+  authors?: string;
+  remarks?: string;
+  expected_revision?: number;
+  request_id?: string;
 };
 export type ChatResult = {
   message: string;

@@ -10,7 +10,7 @@ def test_draft_tdd_abap_generation_has_nonblocking_error(storage, tmp_path):
     assert len(r.abap.invocations) == 1
     issue = next(i for i in result["state"].issues if i.code == "TDD_UNAPPROVED")
     assert issue.severity == "error" and not issue.blocking
-    assert "pending_approval" in result["artifact"].content
+    assert "draft" in result["artifact"].content
 
 
 def test_abap_replaced_without_orchestrator_change(storage, tmp_path):

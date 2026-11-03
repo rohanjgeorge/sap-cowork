@@ -1,7 +1,8 @@
 """Advisory status derivation. Never owns workflow transitions."""
 
 from .models import SDLCStage
-from .router import STAGE_ARTIFACT, dependency_issues
+from .router import STAGE_ARTIFACT, ARTIFACT_STAGE, dependency_issues
+from .state_management import STAGE_REQUIREMENTS, stage_complete
 
 
 class ProjectStatusService:
@@ -14,25 +15,36 @@ class ProjectStatusService:
         issues = []
         for stage in SDLCStage:
             kind = STAGE_ARTIFACT[stage]
-            documents = [
-                r
-                for r in state.artifact_registry
-                if r.artifact_type == kind
-                or (stage == SDLCStage.TESTING and r.artifact_type == "AUDIT_REPORT")
-            ]
+            documents = [r for r in state.artifact_registry if ARTIFACT_STAGE[r.artifact_type] == stage]
             documents.sort(key=lambda r: int(r.version.split(".")[0]), reverse=True)
-            primary = [r for r in documents if r.artifact_type == kind]
-            latest = primary[0] if primary else None
             started = stage in state.started_stages or bool(documents)
-            gaps = dependency_issues(state, kind) if started else []
+            gaps = []
+            if started:
+                for required in STAGE_REQUIREMENTS[stage]:
+                    gaps.extend(dependency_issues(state, required))
             gaps.extend(i for i in state.issues if i.stage == stage and i.blocking)
+            gaps = list({gap.code: gap for gap in gaps}.values())
             issues.extend(gaps)
             questions = [
-                c for c in state.open_clarifications if c.status == "open" and (stage == state.current_stage)
+                c
+                for c in state.clarifications
+                if c.status == "open" and stage == ARTIFACT_STAGE.get(c.related_artifact, state.current_stage)
             ]
+            drafts = stage in (SDLCStage.PLANNING, SDLCStage.ANALYSIS, SDLCStage.DESIGN) and any(
+                entry.status != "approved"
+                for k, entry in state.artifacts.items()
+                if ARTIFACT_STAGE[k] == stage and k != "AUDIT_REPORT"
+            )
+            prior_complete = all(
+                stage_complete(state, s) for s in list(SDLCStage)[: list(SDLCStage).index(stage)]
+            )
             color = (
                 "green"
-                if latest and latest.approval_status == "approved" and not gaps and not questions
+                if stage_complete(state, stage)
+                and prior_complete
+                and not drafts
+                and not gaps
+                and not questions
                 else "amber"
                 if started
                 else "grey"
@@ -47,6 +59,7 @@ class ProjectStatusService:
                         "grey": "Yet to start",
                     }[color],
                     "expected_artifact": kind.value,
+                    "expected_artifacts": STAGE_REQUIREMENTS[stage],
                     "documents": [d.model_dump(mode="json") for d in documents],
                     "clarifications": [c.model_dump(mode="json") for c in questions],
                     "issues": [i.model_dump(mode="json") for i in gaps],
@@ -55,6 +68,13 @@ class ProjectStatusService:
         return {
             "project_id": project_id,
             "current_stage": state.current_stage.value,
+            "current_draft_stage": state.current_draft_stage.value,
+            "current_approved_stage": state.current_approved_stage.value,
+            "project_status": state.project_status,
+            "state_revision": state.state_revision,
+            "confirmations": [c.model_dump(mode="json") for c in state.confirmations],
+            "flags": [f.model_dump(mode="json") for f in state.flags if f.status == "active"],
+            "follow_ups": state.follow_ups,
             "current_task": state.current_task,
             "task_status": state.task_status.value,
             "recommended_stage": state.recommended_stage.value if state.recommended_stage else None,

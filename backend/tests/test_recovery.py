@@ -17,7 +17,7 @@ def test_crash_journal_is_recovered_on_next_transaction(storage):
     assert not (project / ".journal.json").exists()
 
 
-def test_memory_failure_rolls_back_artifact_state_and_audit(storage, tmp_path, monkeypatch):
+def test_memory_failure_preserves_valid_artifact_and_records_retry(storage, tmp_path, monkeypatch):
     runtime = Runtime(storage, tmp_path)
     state = storage.load_state("p")
 
@@ -27,9 +27,10 @@ def test_memory_failure_rolls_back_artifact_state_and_audit(storage, tmp_path, m
     monkeypatch.setattr(storage, "save_memory", fail)
     with pytest.raises(OSError):
         runtime.orchestrator.run("p", "BRD")
-    assert storage.load_state("p") == state
-    assert storage.list_artifacts("p") == []
-    assert storage.list_events("p") == []
+    assert storage.load_state("p").task_status == "failed"
+    assert storage.load_state("p").current_approved_stage == state.current_approved_stage
+    assert storage.load_artifact("p", "BRD").approval_status == "draft"
+    assert storage.list_events("p")
 
 
 def test_simultaneous_duplicate_tasks_commit_one_artifact(storage, tmp_path):

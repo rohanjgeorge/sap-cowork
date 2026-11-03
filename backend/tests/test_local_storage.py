@@ -60,6 +60,7 @@ def test_immutable_versions_and_path_boundaries(store):
         project_id="p",
         artifact_type="BRD",
         content="original",
+        approval_status="approved",
         artifact_version="1",
         template_version="1",
     )

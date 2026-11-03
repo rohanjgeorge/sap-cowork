@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import ApprovedDocumentImport from "./ApprovedDocumentImport";
+import { useEffect, useId, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
   ArrowUp,
   Check,
   FileText,
   Layers3,
+  LoaderCircle,
   Paperclip,
   Sparkles,
 } from "lucide-react";
@@ -13,30 +15,69 @@ import type { ChatInput, Workspace } from "./types";
 
 export default function Chat({
   workspace,
+  onChange,
   onAction,
   onOpen,
   onAttach,
   busy,
   progress,
   optimistic,
+  pendingAction,
   children,
 }: {
   workspace: Workspace;
+  onChange?: (workspace: Workspace) => void;
   onAction: (input: ChatInput) => void;
   onOpen: (id: string, version?: string) => void;
   onAttach: () => void;
   busy: boolean;
   progress: string;
   optimistic: string;
+  pendingAction?: string;
   children?: ReactNode;
 }) {
   const [message, setMessage] = useState("");
+  const [submittedQuestionId, setSubmittedQuestionId] = useState<string | null>(
+    null,
+  );
+  const processingId = useId();
   const end = useRef<HTMLDivElement>(null);
   useEffect(() => {
     end.current?.scrollIntoView?.({ behavior: "smooth" });
   }, [workspace.session.messages.length, busy, progress]);
-  const pending = workspace.status.open_clarifications;
+  useEffect(() => {
+    if (
+      !busy &&
+      submittedQuestionId &&
+      !workspace.status.open_clarifications.some(
+        (question) =>
+          question.clarification_id === submittedQuestionId &&
+          question.status === "open",
+      )
+    ) {
+      setMessage("");
+      setSubmittedQuestionId(null);
+    }
+  }, [busy, submittedQuestionId, workspace.status.open_clarifications]);
+  const pending = workspace.status.open_clarifications.filter(
+    (question) =>
+      question.status === "open" &&
+      (!workspace.state.active_task_id ||
+        !question.task_id ||
+        question.task_id === workspace.state.active_task_id),
+  );
   const active = workspace.state.task_status === "awaiting_input";
+  const answering = busy && pendingAction === "answer";
+  const answerProgress: Record<string, string> = {
+    planning_context: "Checking project context…",
+    ready_to_execute: "Preparing to continue…",
+    executing: "Continuing the task…",
+    validating: "Checking the result…",
+    awaiting_approval: "Preparing the response…",
+  };
+  const closed =
+    workspace.state.project_status !== undefined &&
+    workspace.state.project_status !== "active";
   return (
     <div className="chat-layout">
       <div className="workspace-chat">
@@ -44,7 +85,13 @@ export default function Chat({
           <span className="status-dot" /> PROJECT CONTEXT ACTIVE{" "}
           <span>{workspace.status.current_stage}</span>
         </div>
-        {workspace.session.messages.length === 0 ? (
+        {onChange && (
+          <ApprovedDocumentImport workspace={workspace} onChange={onChange} />
+        )}
+        {workspace.session.messages.length === 0 &&
+        workspace.onboarding &&
+        !workspace.onboarding.complete ? null : workspace.session.messages
+            .length === 0 ? (
           <div className="chat-intro">
             <div className="assistant-mark">
               <Layers3 size={28} />
@@ -67,12 +114,12 @@ export default function Chat({
                       "Generate " + workspace.state.expected_next_artifact,
                   })
                 }
-                disabled={busy}
+                disabled={busy || closed}
               >
                 <FileText size={15} /> Generate{" "}
                 {workspace.state.expected_next_artifact}
               </button>
-              <button onClick={onAttach}>
+              <button disabled={closed} onClick={onAttach}>
                 <Paperclip size={15} /> Add project files
               </button>
             </div>
@@ -83,7 +130,7 @@ export default function Chat({
               const match =
                 m.role === "assistant"
                   ? m.content.match(
-                      /^(BRD|FRD|TDD|ABAP|UAT|AUDIT_REPORT) v([\d.]+):/,
+                      /^(BRD|FRD|USER_STORIES|TDD|ABAP|SIT|UAT|AUDIT_REPORT) v([\d.]+):/,
                     )
                   : null;
               const approved =
@@ -117,7 +164,7 @@ export default function Chat({
                           <FileText size={13} /> Open {match[1]} v{match[2]}
                         </button>
                         <button
-                          disabled={busy || approved}
+                          disabled={busy || closed || approved}
                           onClick={() =>
                             onAction({
                               action: "approve",
@@ -139,7 +186,7 @@ export default function Chat({
             })}
           </div>
         )}
-        {busy && (
+        {busy && !answering && (
           <div className="execution-progress" role="status">
             <Sparkles size={15} />
             <span>
@@ -155,12 +202,15 @@ export default function Chat({
           <section
             className="pending-clarifications"
             aria-label="Pending clarification"
+            aria-busy={answering}
           >
             <p className="eyebrow">A QUICK CLARIFICATION</p>
-            {pending.map((c) => (
-              <p key={c.clarification_id}>{c.question}</p>
-            ))}
-            <small>Your answer will resume the same task.</small>
+            <p>{pending[0].question}</p>
+            <small>
+              {pending.length > 1
+                ? "Answer this question to continue to the next one."
+                : "Your answer will resume the same task."}
+            </small>
           </section>
         )}
         <div ref={end} />
@@ -172,11 +222,33 @@ export default function Chat({
           </p>
         )}
         {children}
+        {answering && (
+          <div
+            className="answer-processing"
+            id={processingId}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <LoaderCircle
+              size={16}
+              className="processing-spinner"
+              aria-hidden="true"
+            />
+            <span>Processing your answer…</span>
+            {answerProgress[progress] && (
+              <small>{answerProgress[progress]}</small>
+            )}
+          </div>
+        )}
         <form
           className="composer"
+          aria-busy={busy}
           onSubmit={(e) => {
             e.preventDefault();
-            if (!message.trim() || busy) return;
+            if (!message.trim() || busy || closed) return;
+            if (active)
+              setSubmittedQuestionId(pending[0]?.clarification_id || null);
             onAction({
               message,
               action: active ? "answer" : undefined,
@@ -184,10 +256,13 @@ export default function Chat({
                 ? pending[0]?.clarification_id
                 : undefined,
             });
-            setMessage("");
+            if (!active) setMessage("");
           }}
         >
           <textarea
+            disabled={closed}
+            readOnly={answering}
+            aria-describedby={answering ? processingId : undefined}
             aria-label={active ? "Clarification answer" : "Message CoWork"}
             placeholder={
               active
@@ -195,7 +270,7 @@ export default function Chat({
                 : "Ask CoWork, or share a change request…"
             }
             rows={2}
-            value={message}
+            value={answering ? optimistic || message : message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
@@ -208,6 +283,7 @@ export default function Chat({
             <button
               type="button"
               aria-label="Attach project file"
+              disabled={closed}
               onClick={onAttach}
             >
               <Paperclip size={16} />
@@ -220,10 +296,25 @@ export default function Chat({
             <button
               type="submit"
               className="send-button"
-              aria-label="Send message"
-              disabled={busy || !message.trim()}
+              aria-label={
+                answering
+                  ? "Processing answer"
+                  : busy
+                    ? "Processing request"
+                    : "Send message"
+              }
+              aria-busy={busy}
+              disabled={busy || closed || !message.trim()}
             >
-              <ArrowUp size={18} />
+              {busy ? (
+                <LoaderCircle
+                  size={18}
+                  className="processing-spinner"
+                  aria-hidden="true"
+                />
+              ) : (
+                <ArrowUp size={18} />
+              )}
             </button>
           </div>
         </form>
