@@ -16,22 +16,7 @@ export function Login({ onLogin }: { onLogin: () => void }) {
         <div className="brand">
           <Layers3 /> SAP CoWork
         </div>
-        <p className="eyebrow">FROM REQUIREMENT TO RELEASE READINESS</p>
-        <h1>
-          Your project.
-          <br />
-          One continuous
-          <br />
-          workspace.
-        </h1>
-        <p>
-          Bring business context, SAP knowledge and development decisions
-          together across your project lifecycle.
-        </p>
-        <div className="stage-line">
-          Planning <span>→</span> Analysis <span>→</span> Design <span>→</span>{" "}
-          Development <span>→</span> Testing
-        </div>
+        <h1>Welcome to Project Workspace</h1>
       </section>
       <section className="login-form">
         <p className="eyebrow">WELCOME TO YOUR WORKSPACE</p>
@@ -71,7 +56,7 @@ export function Login({ onLogin }: { onLogin: () => void }) {
           </button>
         </form>
         <p className="muted">
-          Local single-user session · Enterprise SSO is deferred
+          Note: Local single-user session · Enterprise SSO is deferred
         </p>
       </section>
     </main>

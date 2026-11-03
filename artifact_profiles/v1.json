@@ -1,0 +1,72 @@
+{
+  "BRD": {
+    "artifact_type": "BRD",
+    "version": "1.0",
+    "template_ref": "brd.md",
+    "generation_instructions": "Capture business objectives, scope, stakeholders, requirements, acceptance criteria and assumptions.",
+    "context_requirement_profile": "context_profiles/v1.json#BRD",
+    "expected_output_contract": "ArtifactGenerationResponse/v1",
+    "validation_profile": "application-template-and-provenance/v1",
+    "revision_behavior": "update-draft-or-explicit-version;approved-forks-draft"
+  },
+  "FRD": {
+    "artifact_type": "FRD",
+    "version": "1.0",
+    "template_ref": "frd.md",
+    "generation_instructions": "Describe functional processes, rules, exception paths and requirement traceability.",
+    "context_requirement_profile": "context_profiles/v1.json#FRD",
+    "expected_output_contract": "ArtifactGenerationResponse/v1",
+    "validation_profile": "application-template-and-provenance/v1",
+    "revision_behavior": "update-draft-or-explicit-version;approved-forks-draft"
+  },
+  "USER_STORIES": {
+    "artifact_type": "USER_STORIES",
+    "version": "1.0",
+    "template_ref": "user_stories.md",
+    "generation_instructions": "Write bounded user stories with roles, value and testable acceptance criteria.",
+    "context_requirement_profile": "context_profiles/v1.json#USER_STORIES",
+    "expected_output_contract": "ArtifactGenerationResponse/v1",
+    "validation_profile": "application-template-and-provenance/v1",
+    "revision_behavior": "update-draft-or-explicit-version;approved-forks-draft"
+  },
+  "TDD": {
+    "artifact_type": "TDD",
+    "version": "1.0",
+    "template_ref": "tdd.md",
+    "generation_instructions": "Describe implementation design, interfaces, verified technical dependencies and qualified SAP release assumptions.",
+    "context_requirement_profile": "context_profiles/v1.json#TDD",
+    "expected_output_contract": "ArtifactGenerationResponse/v1",
+    "validation_profile": "application-template-and-provenance/v1",
+    "revision_behavior": "update-draft-or-explicit-version;approved-forks-draft"
+  },
+  "SIT": {
+    "artifact_type": "SIT",
+    "version": "1.0",
+    "template_ref": "sit.md",
+    "generation_instructions": "Define integration scenarios, preconditions, steps, expected results and traceability.",
+    "context_requirement_profile": "context_profiles/v1.json#SIT",
+    "expected_output_contract": "ArtifactGenerationResponse/v1",
+    "validation_profile": "application-template-and-provenance/v1",
+    "revision_behavior": "update-draft-or-explicit-version;approved-forks-draft"
+  },
+  "UAT": {
+    "artifact_type": "UAT",
+    "version": "1.0",
+    "template_ref": "uat.md",
+    "generation_instructions": "Define business acceptance scenarios, user steps and expected outcomes.",
+    "context_requirement_profile": "context_profiles/v1.json#UAT",
+    "expected_output_contract": "ArtifactGenerationResponse/v1",
+    "validation_profile": "application-template-and-provenance/v1",
+    "revision_behavior": "update-draft-or-explicit-version;approved-forks-draft"
+  },
+  "AUDIT_REPORT": {
+    "artifact_type": "AUDIT_REPORT",
+    "version": "1.0",
+    "template_ref": "audit_report.md",
+    "generation_instructions": "Report structured review findings and distinguish deterministic observations from semantic recommendations; never declare approval or passing tests.",
+    "context_requirement_profile": "context_profiles/v1.json#AUDIT_REPORT",
+    "expected_output_contract": "ArtifactGenerationResponse/v1",
+    "validation_profile": "application-template-and-provenance/v1",
+    "revision_behavior": "update-draft-or-explicit-version;approved-forks-draft"
+  }
+}

@@ -29,7 +29,7 @@ def test_cli_commands_share_api_state(tmp_path, monkeypatch):
         invoke(["chat", "-m", "Automate STO deliveries"])
         invoke(["chat", "-m", "Generate BRD"])
         assert "BRD" in invoke(["artifacts", "list"])
-        assert "pending_approval" in invoke(["artifacts", "show", "BRD", "--version", "1"])
+        assert "draft" in invoke(["artifacts", "show", "BRD", "--version", "1"])
         invoke(["artifacts", "approve", "BRD", "--version", "1"])
         assert client.get(f"/api/projects/{p}/status").json()["stages"][0]["color"] == "green"
         assert "usage_percent" in invoke(["context", "status"])
@@ -41,6 +41,17 @@ def test_cli_commands_share_api_state(tmp_path, monkeypatch):
         invoke(["provider", "configure", "--provider", "fake"])
         assert "connected" in invoke(["provider", "test"])
         assert "CoWork >" in invoke(["chat"], input="status\n/exit\n")
+        before = client.get(f"/api/projects/{p}/artifacts").json()
+        invoke(["projects", "stage", "Testing"])
+        assert client.get(f"/api/projects/{p}/state").json()["current_approved_stage"] == "Analysis"
+        assert client.get(f"/api/projects/{p}/artifacts").json() == before
+        output = tmp_path / "brd.docx"
+        invoke(["artifacts", "download", "BRD", str(output)])
+        assert output.read_bytes().startswith(b"PK")
+        invoke(["projects", "close"])
+        assert client.get(f"/api/projects/{p}/state").json()["project_status"] == "incomplete"
+        invoke(["projects", "reopen"])
+        assert client.get(f"/api/projects/{p}/state").json()["project_status"] == "active"
 
 
 def test_cli_login_hides_token(tmp_path, monkeypatch):

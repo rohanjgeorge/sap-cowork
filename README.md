@@ -2,6 +2,8 @@
 
 SAP SDLC workspace with a Python 3.12 / FastAPI backend, Typer CLI, and React / TypeScript UI. The UI and CLI use the same backend orchestration, project state, context, artifact, and model services.
 
+The [V1.1 implementation summary](docs/V1_1_IMPLEMENTATION_SUMMARY.md) records the revised workflow, artifact rules, assumptions, and deferred designs. The current application uses separate Draft and Approved stages; Analysis requires both FRD and User Stories approval.
+
 ## Run locally
 
 From PowerShell:
@@ -18,6 +20,8 @@ http://127.0.0.1:8000
 ```
 
 Select **Enter workspace**.
+
+**New project** offers two starting paths. Choose **Start from scratch with the client requirement** for the usual creation form, or **I have some requirements already approved** to select approved artifacts by SDLC stage. After creation, CoWork asks for each selected document one at a time in chat. The import queue survives reopening; each import records your declared approval. See [project onboarding](docs/PROJECT_START_AND_APPROVED_DOCUMENT_ONBOARDING.md).
 
 To enable an access code, copy `.env.example` to `.env` and set:
 
@@ -63,9 +67,11 @@ API keys are stored separately from project data.
 5. Ask **Generate FRD**
 6. Answer the material-availability clarification
 7. Review and approve FRD v1
-8. Ask **Generate TDD**
-9. Review and approve TDD
-10. Ask **Generate ABAP**
+8. Ask **Generate User Stories**, then review and record approval
+9. Ask **Generate TDD**, then review and record approval
+10. Ask **Generate ABAP** and explicitly confirm satisfactory code
+11. Generate SIT and UAT cases, then record approvals and testing confirmation
+12. Review the automatically generated audit report; close the project manually
 
 The workspace includes:
 
@@ -117,8 +123,13 @@ Register an upstream artifact using:
 | Directory | Responsibility |
 | --- | --- |
 | `backend/app/models.py` | Domain models and interface contracts |
-| `backend/app/orchestrator.py` | Orchestration and task state machine |
+| `backend/app/orchestrator.py` | Stable orchestration import used by existing callers |
+| `backend/app/langgraph_orchestrator.py` | LangGraph execution and runtime pause/resume |
+| `backend/app/legacy_orchestrator.py` | Retained original runtime for parity tests and rollback |
 | `backend/app/runtime.py` | Runtime composition and capability registration |
+| `backend/app/state_management.py` | Validated state operations, revisions, progression and confirmations |
+| `backend/app/artifact_lifecycle.py` | Draft edits, versions, comparisons and downstream impact |
+| `backend/app/document_conversion.py` | Word document conversion |
 | `backend/app/storage.py` | Storage interface |
 | `backend/app/local_storage.py` | Local storage implementation |
 | `backend/app/model_gateway.py` | Model gateway and provider adapters |
@@ -130,6 +141,8 @@ Register an upstream artifact using:
 | `test_fixtures/` | STO reference requirement |
 
 ## Architecture
+
+LangGraph runs orchestration behind the existing API. Domain state, memory, artifacts, context, and provider interfaces remain in their existing services. See [the migration summary](docs/LANGGRAPH_MIGRATION.md) for the function map and checkpoint boundaries.
 
 ```text
 React UI / CLI

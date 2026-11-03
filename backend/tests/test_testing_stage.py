@@ -12,4 +12,4 @@ def test_testing_capabilities_use_shared_worker_and_stop_before_deployment(
     assert result["state"].current_stage == "Testing"
     assert result["state"].active_capability_id == capability
     runtime.approvals.review("p", kind, "1", True)
-    assert storage.load_state("p").recommended_stage is None
+    assert storage.load_state("p").current_approved_stage == "Planning"

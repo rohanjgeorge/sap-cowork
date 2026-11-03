@@ -56,6 +56,36 @@ def test_ordinary_chat_uses_saved_openai_provider_and_not_demo(live_client, mess
         assert result["workspace"]["state"]["requirement"] == ""
 
 
+def test_stage_selection_uses_configured_model_and_replays_without_regenerating(live_client):
+    client, runtime, project, complete = live_client
+    payload = {"action": "set_stage", "stage": "Analysis", "request_id": "stage-guidance"}
+    result = client.post(f"/api/projects/{project}/chat", json=payload).json()
+    assert result["message"] == "A real model reply about your SAP project."
+    assert result["origin"] == "model"
+    assert result["workspace"]["state"]["current_draft_stage"] == "Analysis"
+    assert result["workspace"]["state"]["current_approved_stage"] == "Planning"
+    assert result["workspace"]["state"]["artifact_registry"] == []
+    assert result["workspace"]["session"]["messages"][-1]["origin"] == "model"
+    request = complete.call_args.args[0]
+    assert request.context["stage_guidance"] == "Analysis"
+    assert "at most one focused question" in request.messages[-1]["content"]
+    client.post(f"/api/projects/{project}/chat", json=payload)
+    complete.assert_called_once()
+    assert runtime.gateway.fake.calls == []
+
+
+def test_stage_model_failure_preserves_navigation_without_generic_fallback(live_client):
+    client, runtime, project, complete = live_client
+    complete.side_effect = ModelAccessError("Provider request failed")
+    response = client.post(f"/api/projects/{project}/chat", json={"action": "set_stage", "stage": "Design"})
+    assert response.status_code == 200
+    result = response.json()
+    assert result["workspace"]["state"]["current_draft_stage"] == "Design"
+    assert result["error"] == "Provider request failed"
+    assert result["message"] != "Generate TDD"
+    assert runtime.gateway.fake.calls == []
+
+
 def test_chat_failure_does_not_fall_back_to_fake_or_repeat_workflow(live_client):
     client, runtime, project, complete = live_client
     complete.side_effect = ModelAccessError("Provider request failed; check configuration and model access")
@@ -119,7 +149,7 @@ def test_artifact_worker_uses_connected_openai_and_never_demo(live_client):
     result = client.post(
         f"/api/projects/{project}/chat", json={"action": "generate", "artifact_type": "BRD"}
     ).json()
-    assert result["artifact"]["approval_status"] == "pending_approval"
+    assert result["artifact"]["approval_status"] == "draft"
     assert "Verified provider content." in result["artifact"]["content"]
     assert "demonstration" not in result["artifact"]["content"].lower()
     assert runtime.gateway.fake.calls == []

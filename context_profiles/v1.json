@@ -1,0 +1,725 @@
+{
+  "BRD": {
+    "version": "1.0",
+    "requirements": [
+      {
+        "requirement_id": "project.scope",
+        "description": "Project requirement and scope",
+        "domain": "FUNCTIONAL_PROCESS",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-01",
+          "SRC-02",
+          "SRC-03",
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "project.decisions",
+        "description": "Current decisions and resolved clarifications",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "application.template",
+        "description": "Current application Markdown template",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": []
+      }
+    ]
+  },
+  "FRD": {
+    "version": "1.0",
+    "requirements": [
+      {
+        "requirement_id": "project.scope",
+        "description": "Project requirement and scope",
+        "domain": "FUNCTIONAL_PROCESS",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-01",
+          "SRC-02",
+          "SRC-03",
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "project.decisions",
+        "description": "Current decisions and resolved clarifications",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.brd",
+        "description": "Latest BRD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "BRD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "sap.release",
+        "description": "SAP product, deployment, release, language version and system applicability for version-specific claims",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-06",
+          "SRC-08"
+        ],
+        "query": "release",
+        "requires_verification": true,
+        "claim": "target_implementation"
+      },
+      {
+        "requirement_id": "organization.standards",
+        "description": "Applicable architecture, coding and security standards",
+        "domain": "STANDARDS_GOVERNANCE",
+        "source_categories": [
+          "SRC-06",
+          "SRC-02"
+        ]
+      },
+      {
+        "requirement_id": "historical.related",
+        "description": "Relevant earlier changes and reusable solutions",
+        "domain": "HISTORICAL_DEVELOPMENT",
+        "source_categories": [
+          "SRC-07"
+        ]
+      },
+      {
+        "requirement_id": "application.template",
+        "description": "Current application Markdown template",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": []
+      }
+    ]
+  },
+  "USER_STORIES": {
+    "version": "1.0",
+    "requirements": [
+      {
+        "requirement_id": "project.scope",
+        "description": "Project requirement and scope",
+        "domain": "FUNCTIONAL_PROCESS",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-01",
+          "SRC-02",
+          "SRC-03",
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "project.decisions",
+        "description": "Current decisions and resolved clarifications",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.brd",
+        "description": "Latest BRD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "BRD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.frd",
+        "description": "Latest FRD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "FRD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "sap.release",
+        "description": "SAP product, deployment, release, language version and system applicability for version-specific claims",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-06",
+          "SRC-08"
+        ],
+        "query": "release",
+        "requires_verification": true,
+        "claim": "target_implementation"
+      },
+      {
+        "requirement_id": "organization.standards",
+        "description": "Applicable architecture, coding and security standards",
+        "domain": "STANDARDS_GOVERNANCE",
+        "source_categories": [
+          "SRC-06",
+          "SRC-02"
+        ]
+      },
+      {
+        "requirement_id": "historical.related",
+        "description": "Relevant earlier changes and reusable solutions",
+        "domain": "HISTORICAL_DEVELOPMENT",
+        "source_categories": [
+          "SRC-07"
+        ]
+      },
+      {
+        "requirement_id": "application.template",
+        "description": "Current application Markdown template",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": []
+      }
+    ]
+  },
+  "TDD": {
+    "version": "1.0",
+    "requirements": [
+      {
+        "requirement_id": "project.scope",
+        "description": "Project requirement and scope",
+        "domain": "FUNCTIONAL_PROCESS",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-01",
+          "SRC-02",
+          "SRC-03",
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "project.decisions",
+        "description": "Current decisions and resolved clarifications",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.frd",
+        "description": "Latest FRD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "FRD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.user_stories",
+        "description": "Latest USER_STORIES or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "USER_STORIES",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "sap.release",
+        "description": "SAP product, deployment, release, language version and system applicability for version-specific claims",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-06",
+          "SRC-08"
+        ],
+        "query": "release",
+        "requires_verification": true,
+        "claim": "target_implementation"
+      },
+      {
+        "requirement_id": "organization.standards",
+        "description": "Applicable architecture, coding and security standards",
+        "domain": "STANDARDS_GOVERNANCE",
+        "source_categories": [
+          "SRC-06",
+          "SRC-02"
+        ]
+      },
+      {
+        "requirement_id": "historical.related",
+        "description": "Relevant earlier changes and reusable solutions",
+        "domain": "HISTORICAL_DEVELOPMENT",
+        "source_categories": [
+          "SRC-07"
+        ]
+      },
+      {
+        "requirement_id": "sap.technical",
+        "description": "Relevant technical objects and official technical references",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-05",
+          "SRC-08",
+          "SRC-07"
+        ],
+        "query": "technical",
+        "claim": "standard_behavior"
+      },
+      {
+        "requirement_id": "application.template",
+        "description": "Current application Markdown template",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": []
+      }
+    ]
+  },
+  "ABAP": {
+    "version": "1.0",
+    "requirements": [
+      {
+        "requirement_id": "project.scope",
+        "description": "Project requirement and scope",
+        "domain": "FUNCTIONAL_PROCESS",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-01",
+          "SRC-02",
+          "SRC-03",
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "project.decisions",
+        "description": "Current decisions and resolved clarifications",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.tdd",
+        "description": "Latest TDD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "TDD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "sap.release",
+        "description": "SAP product, deployment, release, language version and system applicability for version-specific claims",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-06",
+          "SRC-08"
+        ],
+        "query": "release",
+        "requires_verification": true,
+        "claim": "target_implementation"
+      },
+      {
+        "requirement_id": "organization.standards",
+        "description": "Applicable architecture, coding and security standards",
+        "domain": "STANDARDS_GOVERNANCE",
+        "source_categories": [
+          "SRC-06",
+          "SRC-02"
+        ]
+      },
+      {
+        "requirement_id": "historical.related",
+        "description": "Relevant earlier changes and reusable solutions",
+        "domain": "HISTORICAL_DEVELOPMENT",
+        "source_categories": [
+          "SRC-07"
+        ]
+      },
+      {
+        "requirement_id": "sap.technical",
+        "description": "Relevant technical objects and official technical references",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-05",
+          "SRC-08",
+          "SRC-07"
+        ],
+        "query": "technical",
+        "claim": "standard_behavior"
+      }
+    ]
+  },
+  "SIT": {
+    "version": "1.0",
+    "requirements": [
+      {
+        "requirement_id": "project.scope",
+        "description": "Project requirement and scope",
+        "domain": "FUNCTIONAL_PROCESS",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-01",
+          "SRC-02",
+          "SRC-03",
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "project.decisions",
+        "description": "Current decisions and resolved clarifications",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.frd",
+        "description": "Latest FRD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "FRD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.tdd",
+        "description": "Latest TDD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "TDD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.abap",
+        "description": "Latest ABAP or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "ABAP",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "sap.release",
+        "description": "SAP product, deployment, release, language version and system applicability for version-specific claims",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-06",
+          "SRC-08"
+        ],
+        "query": "release",
+        "requires_verification": true,
+        "claim": "target_implementation"
+      },
+      {
+        "requirement_id": "organization.standards",
+        "description": "Applicable architecture, coding and security standards",
+        "domain": "STANDARDS_GOVERNANCE",
+        "source_categories": [
+          "SRC-06",
+          "SRC-02"
+        ]
+      },
+      {
+        "requirement_id": "historical.related",
+        "description": "Relevant earlier changes and reusable solutions",
+        "domain": "HISTORICAL_DEVELOPMENT",
+        "source_categories": [
+          "SRC-07"
+        ]
+      },
+      {
+        "requirement_id": "sap.technical",
+        "description": "Relevant technical objects and official technical references",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-05",
+          "SRC-08",
+          "SRC-07"
+        ],
+        "query": "technical",
+        "claim": "standard_behavior"
+      },
+      {
+        "requirement_id": "application.template",
+        "description": "Current application Markdown template",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": []
+      }
+    ]
+  },
+  "UAT": {
+    "version": "1.0",
+    "requirements": [
+      {
+        "requirement_id": "project.scope",
+        "description": "Project requirement and scope",
+        "domain": "FUNCTIONAL_PROCESS",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-01",
+          "SRC-02",
+          "SRC-03",
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "project.decisions",
+        "description": "Current decisions and resolved clarifications",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.brd",
+        "description": "Latest BRD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "BRD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.frd",
+        "description": "Latest FRD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "FRD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.tdd",
+        "description": "Latest TDD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "TDD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.abap",
+        "description": "Latest ABAP or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "ABAP",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "sap.release",
+        "description": "SAP product, deployment, release, language version and system applicability for version-specific claims",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-06",
+          "SRC-08"
+        ],
+        "query": "release",
+        "requires_verification": true,
+        "claim": "target_implementation"
+      },
+      {
+        "requirement_id": "organization.standards",
+        "description": "Applicable architecture, coding and security standards",
+        "domain": "STANDARDS_GOVERNANCE",
+        "source_categories": [
+          "SRC-06",
+          "SRC-02"
+        ]
+      },
+      {
+        "requirement_id": "historical.related",
+        "description": "Relevant earlier changes and reusable solutions",
+        "domain": "HISTORICAL_DEVELOPMENT",
+        "source_categories": [
+          "SRC-07"
+        ]
+      },
+      {
+        "requirement_id": "application.template",
+        "description": "Current application Markdown template",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": []
+      }
+    ]
+  },
+  "AUDIT_REPORT": {
+    "version": "1.0",
+    "requirements": [
+      {
+        "requirement_id": "project.scope",
+        "description": "Project requirement and scope",
+        "domain": "FUNCTIONAL_PROCESS",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-01",
+          "SRC-02",
+          "SRC-03",
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "project.decisions",
+        "description": "Current decisions and resolved clarifications",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-04"
+        ],
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.frd",
+        "description": "Latest FRD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "FRD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.tdd",
+        "description": "Latest TDD or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "TDD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.abap",
+        "description": "Latest ABAP or equivalent requirement evidence; approval recommended",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "ABAP",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "sap.release",
+        "description": "SAP product, deployment, release, language version and system applicability for version-specific claims",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-06",
+          "SRC-08"
+        ],
+        "query": "release",
+        "requires_verification": true,
+        "claim": "target_implementation"
+      },
+      {
+        "requirement_id": "organization.standards",
+        "description": "Applicable architecture, coding and security standards",
+        "domain": "STANDARDS_GOVERNANCE",
+        "source_categories": [
+          "SRC-06",
+          "SRC-02"
+        ]
+      },
+      {
+        "requirement_id": "historical.related",
+        "description": "Relevant earlier changes and reusable solutions",
+        "domain": "HISTORICAL_DEVELOPMENT",
+        "source_categories": [
+          "SRC-07"
+        ]
+      },
+      {
+        "requirement_id": "sap.technical",
+        "description": "Relevant technical objects and official technical references",
+        "domain": "SAP_TECHNICAL",
+        "priority": "essential",
+        "source_categories": [
+          "SRC-05",
+          "SRC-08",
+          "SRC-07"
+        ],
+        "query": "technical",
+        "claim": "standard_behavior"
+      },
+      {
+        "requirement_id": "application.template",
+        "description": "Current application Markdown template",
+        "domain": "SDLC",
+        "priority": "essential",
+        "source_categories": []
+      },
+      {
+        "requirement_id": "artifact.frd",
+        "description": "FRD evidence for audit traceability; missing inputs remain qualified",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "FRD",
+        "claim": "project_requirement"
+      },
+      {
+        "requirement_id": "artifact.tdd",
+        "description": "TDD evidence for audit traceability; missing inputs remain qualified",
+        "domain": "SDLC",
+        "source_categories": [
+          "SRC-03"
+        ],
+        "query": "TDD",
+        "claim": "project_requirement"
+      }
+    ]
+  }
+}

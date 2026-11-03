@@ -1,4 +1,5 @@
 from .models import ProjectMemory, now
+from .context_sources import permitted, qualify, origin_refs
 
 
 class MemoryService:
@@ -8,14 +9,23 @@ class MemoryService:
         self.storage = storage
 
     def refresh(self, state):
+        project = self.storage.load_project(state.project_id)
+        referenced = []
+
         def facts(domain):
-            return (
-                "\n".join(
-                    f"- {item.content[:700]}"
-                    for item in self.storage.load_context(state.project_id, domain)[-12:]
-                )
-                or "No curated facts yet."
-            )
+            aliases = {
+                "BUSINESS": ["BUSINESS", "FUNCTIONAL_PROCESS"],
+                "SAP": ["SAP", "SAP_FUNCTIONAL", "SAP_TECHNICAL"],
+                "ORGANIZATION": ["ORGANIZATION", "STANDARDS_GOVERNANCE"],
+            }
+            entries = [
+                qualify(item, name, state.project_id)
+                for name in aliases.get(domain, [domain])
+                for item in self.storage.load_context(state.project_id, name)
+                if permitted(item, project)
+            ]
+            referenced.extend(entries[-12:])
+            return "\n".join(f"- {item.content[:700]}" for item in entries[-12:]) or "No curated facts yet."
 
         decisions = "\n".join(f"- {d.description}" for d in state.decisions) or "None recorded."
         resolved = (
@@ -43,6 +53,7 @@ class MemoryService:
         memory = ProjectMemory(
             project_id=state.project_id,
             content="\n\n".join(f"{heading}\n{body}" for heading, body in sections),
+            source_refs=origin_refs(referenced),
         )
         self.storage.save_memory(state.project_id, memory)
         project = self.storage.load_project(state.project_id)

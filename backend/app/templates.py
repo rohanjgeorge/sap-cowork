@@ -11,10 +11,8 @@ class TemplateRepository:
         if selected == ArtifactType.ABAP:
             raise ValueError("ABAP templates belong to the replaceable module")
         content = (self.root / f"{selected.value.lower()}.md").read_text(encoding="utf-8")
-        metadata, body = content.split("---", 2)[1:]
-        version = next(
-            line.split(":", 1)[1].strip()
-            for line in metadata.splitlines()
-            if line.startswith("template_version:")
-        )
-        return body.strip(), version
+        # Legacy front matter is accepted, but templates have one current file,
+        # not a version registry. The second result is a structural reference.
+        if content.startswith("---"):
+            content = content.split("---", 2)[2]
+        return content.strip(), f"{selected.value.lower()}.md"

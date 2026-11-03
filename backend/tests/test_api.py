@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from fastapi.testclient import TestClient
 from backend.app.api import create_app
@@ -14,6 +16,44 @@ def client(tmp_path):
         yield client
 
 
+@pytest.mark.parametrize("import_artifacts", [[], ["BRD"]])
+def test_client_name_survives_creation_retries_restart_and_project_listing(
+    client, tmp_path, import_artifacts
+):
+    payload = {
+        "project_name": "Client project",
+        "client_name": "  Acme Industries  ",
+        "stage": "Design" if import_artifacts else "Planning",
+        "import_artifacts": import_artifacts,
+        "request_id": "client-project",
+    }
+    response = client.post("/api/projects", json=payload)
+    assert response.status_code == 200
+    project = response.json()["project"]
+    pid = project["project_id"]
+    assert project["client_name"] == "Acme Industries"
+    assert response.json()["state"]["current_draft_stage"] == payload["stage"]
+    assert client.post("/api/projects", json=payload).json()["project"]["project_id"] == pid
+    conflict = client.post("/api/projects", json={**payload, "client_name": "Another client"})
+    assert conflict.status_code == 409
+    with TestClient(create_app(tmp_path, MemorySecretStore(), access_code="test-code")) as restarted:
+        restarted.post("/api/session", json={"access_code": "test-code"})
+        assert restarted.get(f"/api/projects/{pid}").json()["project"]["client_name"] == "Acme Industries"
+        assert restarted.get("/api/projects").json()[0]["client_name"] == "Acme Industries"
+        assert len(restarted.get("/api/projects").json()) == 1
+
+
+def test_legacy_project_without_client_name_remains_readable(client, tmp_path):
+    created = client.post("/api/projects", json={"project_name": "Legacy project"}).json()
+    pid = created["project"]["project_id"]
+    project_file = tmp_path / "project" / pid / "project.json"
+    original = json.loads(project_file.read_text(encoding="utf-8"))
+    original.pop("client_name")
+    project_file.write_text(json.dumps(original), encoding="utf-8")
+    assert client.get(f"/api/projects/{pid}").json()["project"]["client_name"] is None
+    assert client.get("/api/projects").json()[0]["client_name"] is None
+
+
 def test_api_vertical_slice_and_shared_state(client):
     created = client.post("/api/projects", json={"project_name": "STO API"}).json()
     p = created["project"]["project_id"]
@@ -24,22 +64,26 @@ def test_api_vertical_slice_and_shared_state(client):
         ).status_code
         == 200
     )
-    for kind, next_stage in [("BRD", "Analysis"), ("FRD", "Design"), ("TDD", "Development")]:
+    for kind, next_stage in [
+        ("BRD", "Analysis"),
+        ("FRD", None),
+        ("USER_STORIES", "Design"),
+        ("TDD", "Development"),
+    ]:
         generated = client.post(
             f"/api/projects/{p}/chat", json={"action": "generate", "artifact_type": kind}
         ).json()
         assert generated["artifact"]["artifact_type"] == kind, generated
         assert (
-            client.get(f"/api/projects/{p}/artifacts/{kind}?version=1").json()["approval_status"]
-            == "pending_approval"
+            client.get(f"/api/projects/{p}/artifacts/{kind}?version=1").json()["approval_status"] == "draft"
         )
         approved = client.post(
             f"/api/projects/{p}/artifacts/{kind}/review", json={"action": "approve", "version": "1"}
         ).json()
         assert approved["workspace"]["status"]["recommended_stage"] == next_stage
     assert len(client.get("/api/projects").json()) == 1
-    assert len(client.get(f"/api/projects/{p}/artifacts").json()) == 3
-    assert client.get(f"/api/projects/{p}/state").json()["current_stage"] == "Design"
+    assert len(client.get(f"/api/projects/{p}/artifacts").json()) == 4
+    assert client.get(f"/api/projects/{p}/state").json()["current_draft_stage"] == "Design"
     assert client.get(f"/api/projects/{p}").json()["memory"]["content"]
     assert client.get(f"/api/projects/{p}/context").json()["estimated"]
     compact = client.post(f"/api/projects/{p}/context/compact").json()
@@ -47,7 +91,9 @@ def test_api_vertical_slice_and_shared_state(client):
 
 
 def test_upload_versions_settings_stream_and_errors(client, monkeypatch):
-    p = client.post("/api/projects", json={"project_name": "Files"}).json()["project"]["project_id"]
+    p = client.post("/api/projects", json={"project_name": "Files", "requirement": "STO automation"}).json()[
+        "project"
+    ]["project_id"]
     upload = client.post(
         f"/api/projects/{p}/files",
         files={"file": ("frd.md", b"# Functional scope")},

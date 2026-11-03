@@ -1,5 +1,5 @@
 {
-  "started_at": "2026-10-30T03:23:36.946168+00:00",
+  "started_at": "2026-11-03T07:57:25.205917+00:00",
   "steps": [
     {
       "name": "Python lint",
@@ -28,7 +28,7 @@
         "scripts"
       ],
       "exit_code": 0,
-      "output": "67 files already formatted\n"
+      "output": "98 files already formatted\n"
     },
     {
       "name": "Backend and CLI full suite",
@@ -40,7 +40,7 @@
         "--junitxml=docs/python-tests.xml"
       ],
       "exit_code": 0,
-      "output": "........................................................................ [ 75%]\n.......................                                                  [100%]\n============================== warnings summary ===============================\n.venv\\Lib\\site-packages\\fastapi\\testclient.py:1\n  D:\\rohanjgeorge\\SAP CoWork\\sap-cowork\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n95 passed, 1 warning in 13.63s\n"
+      "output": "........................................................................ [ 30%]\n........................................................................ [ 61%]\n........................................................................ [ 91%]\n...................                                                      [100%]\n============================== warnings summary ===============================\nbackend/tests/test_capability_architecture.py::test_research_iterates_over_permitted_tools_and_qualifies_findings\nbackend/tests/test_capability_architecture.py::test_research_cannot_invent_tools_or_bypass_budget\nbackend/tests/test_capability_architecture.py::test_research_rechecks_authorization_after_model_selection\nbackend/tests/test_capability_architecture.py::test_context_planning_invokes_research_subgraph_within_limits\nbackend/tests/test_capability_architecture.py::test_audit_aggregates_findings_without_accepting_code_or_running_sap\nbackend/tests/test_testing_stage.py::test_testing_capabilities_use_shared_worker_and_stop_before_deployment[AUDIT_REPORT-AUDIT_WORKER]\nbackend/tests/test_workflow_v11.py::test_v11_shared_api_vertical_slice_and_docx_roundtrip\n  D:\\rohanjgeorge\\SAP CoWork\\sap-cowork\\.venv\\Lib\\site-packages\\langgraph\\pregel\\main.py:2906: UserWarning: `durability` has no effect when no checkpointer is present.\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n235 passed, 7 warnings in 216.20s (0:03:36)\n"
     },
     {
       "name": "UI unit and interaction suite",
@@ -49,7 +49,7 @@
         "test"
       ],
       "exit_code": 0,
-      "output": "\n> sap-cowork-ui@0.1.0 test\n> vitest run\n\n\n RUN  v4.1.12 D:/rohanjgeorge/SAP CoWork/sap-cowork/frontend\n\n\n Test Files  8 passed (8)\n      Tests  13 passed (13)\n   Start at  08:53:52\n   Duration  2.64s (transform 1.13s, setup 2.34s, import 4.12s, tests 3.33s, environment 6.17s)\n\n"
+      "output": "\n> sap-cowork-ui@0.1.0 test\n> vitest run\n\n\n RUN  v4.1.12 D:/rohanjgeorge/SAP CoWork/sap-cowork/frontend\n\n\n Test Files  13 passed (13)\n      Tests  40 passed (40)\n   Start at  13:31:05\n   Duration  10.23s (transform 2.51s, setup 10.96s, import 15.02s, tests 21.20s, environment 30.05s)\n\n"
     },
     {
       "name": "TypeScript and production build",
@@ -59,7 +59,7 @@
         "build"
       ],
       "exit_code": 0,
-      "output": "\n> sap-cowork-ui@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.5 building for production...\ntransforming...\n\u2713 1771 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.56 kB \u2502 gzip:   0.34 kB\ndist/assets/index-D0T4oBbg.css   18.31 kB \u2502 gzip:   4.91 kB\ndist/assets/index-BQtT420T.js   393.61 kB \u2502 gzip: 121.30 kB\n\u2713 built in 2.57s\n"
+      "output": "\n> sap-cowork-ui@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.5 building for production...\ntransforming...\n\u2713 1867 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.56 kB \u2502 gzip:   0.34 kB\ndist/assets/index-CheZCpW0.css   24.60 kB \u2502 gzip:   6.19 kB\ndist/assets/index-DXetwc13.js   463.21 kB \u2502 gzip: 141.59 kB\n\u2713 built in 3.47s\n"
     },
     {
       "name": "Frontend dependency audit",
@@ -81,7 +81,7 @@
         "e2e/experience.spec.ts"
       ],
       "exit_code": 0,
-      "output": "\n> sap-cowork-ui@0.1.0 test:e2e\n> playwright test e2e/experience.spec.ts\n\n\nRunning 4 tests using 1 worker\n\n  ok 1 e2e\\experience.spec.ts:3:1 \u203a ordinary chat invokes the selected demo model instead of repeating workflow guidance (1.6s)\n  ok 2 e2e\\experience.spec.ts:59:1 \u203a files, revision history, comparison, compaction and project reopen (2.7s)\n  ok 3 e2e\\experience.spec.ts:134:1 \u203a draft TDD permits ABAP with a visible non-blocking PM error (1.4s)\n  ok 4 e2e\\experience.spec.ts:160:1 \u203a mobile workspace, provider settings and assisted stage confirmation (826ms)\n\n  4 passed (9.2s)\n[WebServer] INFO:     Started server process [11184]\n[WebServer] INFO:     Waiting for application startup.\n[WebServer] INFO:     Application startup complete.\n[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)\n(node:9964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+      "output": "\n> sap-cowork-ui@0.1.0 test:e2e\n> playwright test e2e/experience.spec.ts\n\n\nRunning 11 tests using 1 worker\n\n  ok  1 e2e\\experience.spec.ts:3:1 \u203a ordinary chat invokes the selected demo model instead of repeating workflow guidance (1.7s)\n  ok  2 e2e\\experience.spec.ts:77:1 \u203a clarification answers show visible processing before the server replies (3.7s)\n  ok  3 e2e\\experience.spec.ts:127:1 \u203a Work on requests model guidance without generating artifacts or advancing Current Stage (1.7s)\n  ok  4 e2e\\experience.spec.ts:175:1 \u203a context categories expand and status record lists return to the lifecycle (1.8s)\n  ok  5 e2e\\experience.spec.ts:234:3 \u203a closed incomplete projects move to Completed and return to Active when reopened (1440px) (2.1s)\n  ok  6 e2e\\experience.spec.ts:234:3 \u203a closed incomplete projects move to Completed and return to Active when reopened (390px) (1.9s)\n  ok  7 e2e\\experience.spec.ts:278:1 \u203a files, revision history, comparison, compaction and project reopen (6.2s)\n  ok  8 e2e\\experience.spec.ts:359:1 \u203a draft TDD permits ABAP with a visible non-blocking PM error (5.2s)\n  ok  9 e2e\\experience.spec.ts:385:1 \u203a mobile workspace, provider settings and assisted stage confirmation (1.5s)\n  ok 10 e2e\\experience.spec.ts:445:1 \u203a mixed draft and approved onboarding preserves each status and survives reopening (3.2s)\n  ok 11 e2e\\experience.spec.ts:535:1 \u203a BRD viewer presents formatted tables and keeps wide tables inside the mobile page (3.1s)\n\n  11 passed (36.3s)\n[WebServer] INFO:     Started server process [1180]\n[WebServer] INFO:     Waiting for application startup.\n[WebServer] INFO:     Application startup complete.\n[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)\n(node:39736) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
     },
     {
       "name": "FINAL STO GATING TEST",
@@ -93,9 +93,9 @@
         "e2e/zz-sto-gate.spec.ts"
       ],
       "exit_code": 0,
-      "output": "\n> sap-cowork-ui@0.1.0 test:e2e\n> playwright test e2e/zz-sto-gate.spec.ts\n\n\nRunning 1 test using 1 worker\n\n  ok 1 e2e\\zz-sto-gate.spec.ts:5:1 \u203a FINAL GATE: STO CR \u2192 BRD \u2192 FRD clarification \u2192 TDD \u2192 replaceable ABAP (4.6s)\n\n  1 passed (6.5s)\n[WebServer] INFO:     Started server process [24952]\n[WebServer] INFO:     Waiting for application startup.\n[WebServer] INFO:     Application startup complete.\n[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)\n(node:27584) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n"
+      "output": "\n> sap-cowork-ui@0.1.0 test:e2e\n> playwright test e2e/zz-sto-gate.spec.ts\n\n\nRunning 1 test using 1 worker\n\n  ok 1 e2e\\zz-sto-gate.spec.ts:5:1 \u203a FINAL GATE: STO CR \u2192 BRD \u2192 FRD clarification \u2192 TDD \u2192 replaceable ABAP (35.0s)\n\n  1 passed (39.3s)\n[WebServer] INFO:     Started server process [29820]\n[WebServer] INFO:     Waiting for application startup.\n[WebServer] INFO:     Application startup complete.\n[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)\n(node:17096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n[WebServer] D:\\rohanjgeorge\\SAP CoWork\\sap-cowork\\.venv\\Lib\\site-packages\\langgraph\\pregel\\main.py:2906: UserWarning: `durability` has no effect when no checkpointer is present.\n[WebServer]   warnings.warn(\n"
     }
   ],
   "status": "passed",
-  "completed_at": "2026-10-30T03:24:20.070782+00:00"
+  "completed_at": "2026-11-03T08:02:44.448556+00:00"
 }

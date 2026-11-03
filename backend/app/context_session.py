@@ -1,3 +1,4 @@
+from .context_domains import DOMAIN_FIELDS
 from .model_gateway import estimate_tokens
 
 
@@ -43,12 +44,12 @@ class ContextSessionService:
             "compactions": session["compactions"],
             "model": self.settings.current().default_model,
             "provider": self.settings.current().provider,
+            "planning": session.get("context_planning"),
         }
 
     def compact(self, project_id):
         # Called within a service transaction or explicit compact action transaction.
-        state = self.storage.load_state(project_id)
-        self.storage.save_state(project_id, state)
+        # Compaction never rewrites workflow state.
         memory = self.storage.load_memory(project_id)
         self.storage.save_memory(project_id, memory)
         session = self.storage.load_session(project_id)
@@ -66,16 +67,26 @@ class ContextSessionService:
         session = self.storage.load_session(state.project_id)
         session["active_context"] = package.model_dump(mode="json")
         session["active_domains"] = [
-            domain
-            for domain, field in (
-                ("BUSINESS", "business_context"),
-                ("SAP", "sap_context"),
-                ("ORGANIZATION", "organization_context"),
-                ("HISTORICAL_DEVELOPMENT", "historical_context"),
-                ("SDLC", "sdlc_context"),
-            )
-            if getattr(package, field)
+            domain for domain, field in DOMAIN_FIELDS.items() if getattr(package, field)
         ]
+        aliases = {
+            "FUNCTIONAL_PROCESS": "BUSINESS",
+            "SAP_FUNCTIONAL": "SAP",
+            "SAP_TECHNICAL": "SAP",
+            "STANDARDS_GOVERNANCE": "ORGANIZATION",
+        }
+        session["active_domains"] = list(
+            dict.fromkeys(
+                session["active_domains"] + [aliases[d] for d in session["active_domains"] if d in aliases]
+            )
+        )
+        if package.package_ref:
+            session["context_planning"] = {
+                "package_ref": package.package_ref,
+                "plan_ref": package.plan_ref,
+                "gaps": [g.model_dump(mode="json") for g in package.gaps],
+                "constraints": package.constraints,
+            }
         self.storage.save_session(state.project_id, session)
         status = self.status(state.project_id)
         if status["band"] == "high_pressure":

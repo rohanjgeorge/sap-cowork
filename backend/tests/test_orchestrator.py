@@ -48,5 +48,6 @@ def test_storage_failure_does_not_commit_or_advance(storage, monkeypatch):
     monkeypatch.setattr(storage, "save_artifact", lambda *args: (_ for _ in ()).throw(OSError("disk full")))
     with pytest.raises(OSError):
         Orchestrator(storage, registry).run("p", "BRD")
-    assert storage.load_state("p") == before
+    assert storage.load_state("p").task_status == "failed"
+    assert storage.load_state("p").current_approved_stage == before.current_approved_stage
     assert storage.list_artifacts("p") == []
